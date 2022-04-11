@@ -1,12 +1,16 @@
-import express from "express";
-import apiV1 from "./Api/v1/Api";
-import admin from "./Admin/Admin";
-const route = express.Router();
-
 /**
- * Candidate Api routing
+ * Define all your API routes
+ *
+ * @author Sameer <sameerp.spaceo@gmail.com>
  */
 
-route.use("/api/v1/", apiV1);
-route.use("/admin", admin);
-export default route;
+ import { Router } from "express";
+ import userApi from "./Api/v1/userApi"
+ 
+ const router = Router();
+ 
+ router.use("/api", userApi);
+
+ 
+ export default router;
+ 

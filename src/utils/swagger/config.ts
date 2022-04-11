@@ -1,9 +1,8 @@
-import swPaths from './paths';
-import swDefinitions from './definitions';
-const {paths} = new swPaths();
-const {definitions} = new swDefinitions();
-let host = process.env.HOST+':'+process.env.PORT
-
+import swPaths from "./paths";
+import swDefinitions from "./definitions";
+const { paths } = new swPaths();
+const { definitions } = new swDefinitions();
+let host = process.env.HOST + ":" + process.env.PORT;
 
 module.exports = {
   openapi: "3.0.0",
@@ -30,4 +29,4 @@ module.exports = {
     parameters: parameters,
   },
   paths: paths,
-}
+};

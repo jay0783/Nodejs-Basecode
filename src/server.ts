@@ -1,5 +1,5 @@
 /**
- * @author Sameer <sameerp.spaceo@gmail.com>
+ * @author Smit <smits.spaceo@gmail.com>
  */
 
 import express from "express";
@@ -7,8 +7,8 @@ import Locals from "./config/Locals";
 import compression from "compression";
 import logger from "./utils/logger";
 import multer from "multer";
-import apiRouter from "./routes/Api/v1/Api";
-import { StatusCodes } from "./utils/status-code";
+import apiRouter from "./routes/index";
+import db from "./config/Database"
 
 /**
  * Server class
@@ -76,31 +76,10 @@ class App {
     // this.express.use("/", (req, res) => {
     //   res.status(StatusCodes.BAD_REQUEST).send({ error: `path doesn't exist` });
     // });
-    this.express.use("/api", apiRouter);
+    this.express.use("/", apiRouter);
   }
 
   /**
-<<<<<<< HEAD
-=======
-   * Connect to the database
-   */
-  // private async connect(): Promise<void> {
-  //   // use native ES6 promises instead of mongoose promise library
-  //   (<any>mongoose).Promise = global.Promise;
-
-  //   const options = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true };
-
-  //   // Create the database connection
-  //   await mongoose.connect(process.env.MONGOOSE_URL as string, options as object)
-  //     .then(() => logger.info("mongoDB connected..."))
-  //     .catch((err: { stack: any }) => {
-  //       logger.error("Database starting error: ", err.stack)
-  //       process.exit(1);
-  //     });
-  // }
-
-  /**
->>>>>>> main
    * Starts the express server
    */
   public listen(): void {

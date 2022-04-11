@@ -1,312 +1,312 @@
 export default class SwaggerDefinitions {
-    constructor() {}
-    definitions = {
-        UserSignupReqModel: {
-            properties: {
-                vFullName: {
-                    type: "string",
-                },
-                vEmail: {
-                  type: "string",
-                },
-                vPassword: {
-                  type: "string",
-                },
-                vPhoneCode: {
-                  type: "string",
-                },
-                vPhone: {
-                  type: "string",
-                },
-                vdevice_Token: {
-                  type: "string",
-                }
-            }
+  constructor() {}
+  definitions = {
+    UserSignupReqModel: {
+      properties: {
+        vFullName: {
+          type: "string",
         },
-        UserResModel: {
-            properties: {
-                code: {
-                  type: "integer"
-                },
-                message: {
-                  type: "string"
-                },
-                data: {
-                  type: "object",
-                  $ref: "#/definitions/UserResModelData"
-                }
-            } 
+        vEmail: {
+          type: "string",
         },
-        UserResModelData: {
-            properties: {
-                userId: {
-                  type: "string"
-                },
-                vFullName: {
-                  type: "string"
-                },
-                vEmail: {
-                  type: "string"
-                },
-                vPhoneCode: {
-                  type: "string"
-                },
-                vPhone: {
-                  type: "string"
-                },
-                vProfilePic: {
-                  type: "string"
-                },
-                bisPhoneVerified: {
-                  type: "boolean"
-                },
-                bisEmailVerified: {
-                  type: "boolean"
-                },
-                vAccess_token: {
-                  type: "string"
-                }
-            }  
+        vPassword: {
+          type: "string",
         },
-        UserLoginReqModel: {
-            properties: {
-                vEmail: {
-                  type: "string",
-                },
-                vPassword: {
-                  type: "string",
-                },
-                vdevice_Token: {
-                  type: "string",
-                }
-            }
+        vPhoneCode: {
+          type: "string",
         },
-        VerifyOtpReqModel: {
-            properties: {
-              iEmailOtp: {
-                type: "integer"
-              },
-              vEmail: {
-                type: "string"
-              }
-            }
+        vPhone: {
+          type: "string",
         },
-        ResendOtpReqModel: {
-            properties: {
-              vEmail: {
-                type: "string"
-              }
-            }
+        vdevice_Token: {
+          type: "string",
         },
-        UserForgotPasswordReqModel: {
-            properties: {
-              vEmail: {
-                type: "string",
-              }
-            }
+      },
+    },
+    UserResModel: {
+      properties: {
+        code: {
+          type: "integer",
         },
-        ChangePasswordReqModel: {
-            properties: {
-              oldPassword: {
-                type: "string"
-              },
-              newPassword: {
-                type: "string"
-              },
-              cnfPassword: {
-                type: "string"
-              }
-            }
+        message: {
+          type: "string",
         },
-        ProfileResModel: {
-            properties: {
-              code: {
-                type: "integer"
-              },
-              message: {
-                type: "string"
-              },
-              data: {
-                type: "object",
-                $ref: "#/definitions/ProfileResModelData"
-              }
-            }
+        data: {
+          type: "object",
+          $ref: "#/definitions/UserResModelData",
         },
-        ProfileResModelData: {
-            properties: {
-              userId: {
-                type: "string"
-              },
-              vFullName: {
-                type: "string"
-              },
-              vProfilePic: {
-                type: "string"
-              },
-              vEmail: {
-                type: "string"
-              }      
-            }
+      },
+    },
+    UserResModelData: {
+      properties: {
+        userId: {
+          type: "string",
         },
-        UpdateProfileReqModel: {
-            properties: {
-                vFullName: {
-                  type: "string"
-                },
-                vEmail: {
-                  type: "string"
-                },
-                vPhoneCode: {
-                  type: "string"
-                },
-                vPhone: {
-                  type: "string"
-                },
-                vProfilePic: {
-                  type: "string"
-                }               
-            },
+        vFullName: {
+          type: "string",
         },
-        FbUserSignupReqModel: {
-            properties: {
-              token: {
-                type: "string"
-              },
-              vdevice_Token: {
-                type: "string",
-              }
-            }
+        vEmail: {
+          type: "string",
         },
-        GoogleUserSignupReqModel: {
-          properties: {
-            token: {
-              type: "string"
-            },
-            vdevice_Token: {
-              type: "string",
-            }
-          }
+        vPhoneCode: {
+          type: "string",
         },
-        GetStaticContentsResModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "object",
-              $ref: "#/definitions/GetStaticContentsResModelData"
-            }
-          }
+        vPhone: {
+          type: "string",
         },
-        GetStaticContentsResModelData: {
-          properties: {
-            _id: {
-              type: "string"
-            },
-            vTitle: {
-              type: "string"
-            },
-            vSlug: {
-              type: "string"
-            },
-            txContent: {
-              type: "string"
-            },
-            tiIsActive: {
-              type: "number"
-            },
-            tiIsDeleted: {
-              type: "number"
-            },
-            updatedAt: {
-              type: "string"
-            },
-            createdAt: {
-              type: "string"
-            }
-          }
+        vProfilePic: {
+          type: "string",
         },
-        NotificationsModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "array",
-              items: {
-                type: "object",
-                $ref: "#/definitions/NotificationsModelData"
-              }
-            },
-            totalCount: {
-              type: "integer"
-            }
-          }
+        bisPhoneVerified: {
+          type: "boolean",
         },
-        NotificationsModelData: {
-            properties: {
-              notificationId: {
-                type: "string"
-              },
-              iItemId: {
-                type: "string"
-              },
-              bIsread: {
-                type: "boolean"
-              },
-              vTitle: {
-                type: "string"
-              },
-              vMessage: {
-                type: "string"
-              },
-              createdAt: {
-                type: "string"
-              }    
-            }
+        bisEmailVerified: {
+          type: "boolean",
         },
-        SetNotificationFlagReqModel: {
-          properties: {
-            flagId: {
-              type: "integer"
-            },
-            tiIsActive: {
-              type: "string"
-            }
-          }
+        vAccess_token: {
+          type: "string",
         },
-        NotificationFlagsResModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "object",
-              $ref: "#/definitions/NotificationFlagsResModelData"
-            }
-          }
+      },
+    },
+    UserLoginReqModel: {
+      properties: {
+        vEmail: {
+          type: "string",
         },
-        NotificationFlagsResModelData: {
-          properties: {
-            bPush: {
-              type: "boolean"
-            },
-            bSms: {
-              type: "boolean"
-            },
-            bEmail: {
-              type: "boolean"
-            }
-          }
+        vPassword: {
+          type: "string",
         },
-    }
+        vdevice_Token: {
+          type: "string",
+        },
+      },
+    },
+    VerifyOtpReqModel: {
+      properties: {
+        iEmailOtp: {
+          type: "integer",
+        },
+        vEmail: {
+          type: "string",
+        },
+      },
+    },
+    ResendOtpReqModel: {
+      properties: {
+        vEmail: {
+          type: "string",
+        },
+      },
+    },
+    UserForgotPasswordReqModel: {
+      properties: {
+        vEmail: {
+          type: "string",
+        },
+      },
+    },
+    ChangePasswordReqModel: {
+      properties: {
+        oldPassword: {
+          type: "string",
+        },
+        newPassword: {
+          type: "string",
+        },
+        cnfPassword: {
+          type: "string",
+        },
+      },
+    },
+    ProfileResModel: {
+      properties: {
+        code: {
+          type: "integer",
+        },
+        message: {
+          type: "string",
+        },
+        data: {
+          type: "object",
+          $ref: "#/definitions/ProfileResModelData",
+        },
+      },
+    },
+    ProfileResModelData: {
+      properties: {
+        userId: {
+          type: "string",
+        },
+        vFullName: {
+          type: "string",
+        },
+        vProfilePic: {
+          type: "string",
+        },
+        vEmail: {
+          type: "string",
+        },
+      },
+    },
+    UpdateProfileReqModel: {
+      properties: {
+        vFullName: {
+          type: "string",
+        },
+        vEmail: {
+          type: "string",
+        },
+        vPhoneCode: {
+          type: "string",
+        },
+        vPhone: {
+          type: "string",
+        },
+        vProfilePic: {
+          type: "string",
+        },
+      },
+    },
+    FbUserSignupReqModel: {
+      properties: {
+        token: {
+          type: "string",
+        },
+        vdevice_Token: {
+          type: "string",
+        },
+      },
+    },
+    GoogleUserSignupReqModel: {
+      properties: {
+        token: {
+          type: "string",
+        },
+        vdevice_Token: {
+          type: "string",
+        },
+      },
+    },
+    GetStaticContentsResModel: {
+      properties: {
+        code: {
+          type: "integer",
+        },
+        message: {
+          type: "string",
+        },
+        data: {
+          type: "object",
+          $ref: "#/definitions/GetStaticContentsResModelData",
+        },
+      },
+    },
+    GetStaticContentsResModelData: {
+      properties: {
+        _id: {
+          type: "string",
+        },
+        vTitle: {
+          type: "string",
+        },
+        vSlug: {
+          type: "string",
+        },
+        txContent: {
+          type: "string",
+        },
+        tiIsActive: {
+          type: "number",
+        },
+        tiIsDeleted: {
+          type: "number",
+        },
+        updatedAt: {
+          type: "string",
+        },
+        createdAt: {
+          type: "string",
+        },
+      },
+    },
+    NotificationsModel: {
+      properties: {
+        code: {
+          type: "integer",
+        },
+        message: {
+          type: "string",
+        },
+        data: {
+          type: "array",
+          items: {
+            type: "object",
+            $ref: "#/definitions/NotificationsModelData",
+          },
+        },
+        totalCount: {
+          type: "integer",
+        },
+      },
+    },
+    NotificationsModelData: {
+      properties: {
+        notificationId: {
+          type: "string",
+        },
+        iItemId: {
+          type: "string",
+        },
+        bIsread: {
+          type: "boolean",
+        },
+        vTitle: {
+          type: "string",
+        },
+        vMessage: {
+          type: "string",
+        },
+        createdAt: {
+          type: "string",
+        },
+      },
+    },
+    SetNotificationFlagReqModel: {
+      properties: {
+        flagId: {
+          type: "integer",
+        },
+        tiIsActive: {
+          type: "string",
+        },
+      },
+    },
+    NotificationFlagsResModel: {
+      properties: {
+        code: {
+          type: "integer",
+        },
+        message: {
+          type: "string",
+        },
+        data: {
+          type: "object",
+          $ref: "#/definitions/NotificationFlagsResModelData",
+        },
+      },
+    },
+    NotificationFlagsResModelData: {
+      properties: {
+        bPush: {
+          type: "boolean",
+        },
+        bSms: {
+          type: "boolean",
+        },
+        bEmail: {
+          type: "boolean",
+        },
+      },
+    },
+  };
 }
