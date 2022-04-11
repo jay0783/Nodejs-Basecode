@@ -80,6 +80,27 @@ class App {
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Connect to the database
+   */
+  // private async connect(): Promise<void> {
+  //   // use native ES6 promises instead of mongoose promise library
+  //   (<any>mongoose).Promise = global.Promise;
+
+  //   const options = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true };
+
+  //   // Create the database connection
+  //   await mongoose.connect(process.env.MONGOOSE_URL as string, options as object)
+  //     .then(() => logger.info("mongoDB connected..."))
+  //     .catch((err: { stack: any }) => {
+  //       logger.error("Database starting error: ", err.stack)
+  //       process.exit(1);
+  //     });
+  // }
+
+  /**
+>>>>>>> main
    * Starts the express server
    */
   public listen(): void {
