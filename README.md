@@ -1,9 +1,3 @@
-# Node Js demo
+Node js - basecode 
 
-This is the node js demo project
-
-# For development
-npm run dev
-
-# For production
-npm run prod
+This boilerplate will be used as basecode for upcoming Node projects
