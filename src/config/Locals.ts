@@ -6,7 +6,7 @@
 import { Application } from "express";
 import "dotenv/config";
 
-export default class Locals 
+export default class Locals {
   /**
    * Makes env configs available for your app
    * throughout the app's runtime
