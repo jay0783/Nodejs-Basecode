@@ -9,7 +9,7 @@ import { validationResult } from "express-validator";
 
 import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
-import { ReasonPhrases, StatusCodes } from "../../../utils/status-code/index";
+import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 
 export default class AuthController extends BaseController {
   public static async signup(req: any, res: any): Promise<any> {
@@ -72,15 +72,11 @@ export default class AuthController extends BaseController {
       const user = await UserModel.findOne({
         email: req.body.email,
       });
-      if(user){
+      if (user) {
         res.send(
-          Helper.responseWithoutData(
-            true,
-            StatusCodes.OK,
-            ReasonPhrases.OK
-          )
+          Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
         );
-      }else{
+      } else {
         res.send(
           Helper.responseWithoutData(
             false,
@@ -89,7 +85,6 @@ export default class AuthController extends BaseController {
           )
         );
       }
-      
     } catch {
       res.send(
         Helper.responseWithoutData(
@@ -197,7 +192,7 @@ export default class AuthController extends BaseController {
       );
     }
   }
-  
+
   public static async resetPassword(req: any, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
