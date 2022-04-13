@@ -1,12 +1,9 @@
-/**
- * @author Smit <smits.spaceo@gmail.com>
- */
-
 import express from "express";
 import Locals from "./config/Locals";
 import compression from "compression";
 import logger from "./utils/logger";
 import multer from "multer";
+import helmet from "helmet";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
 import openApiDocumentation from "./utils/swagger/config";
@@ -56,6 +53,7 @@ class App {
 
     // for parsing application/x-www-form-urlencoded
     this.express.use(express.urlencoded({ extended: true }));
+    this.express.use(helmet());
 
     // for parsing multipart/form-data
     this.express.use(multer().any());

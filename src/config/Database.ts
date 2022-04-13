@@ -13,6 +13,7 @@ export class Database {
   // Initialize your database pool
   public static init(): any {
     const dsn = Locals.config().mongooseUrl;
+    console.log(dsn);
 
     // use native ES6 promises instead of mongoose promise library
     (<any>mongoose).Promise = global.Promise;

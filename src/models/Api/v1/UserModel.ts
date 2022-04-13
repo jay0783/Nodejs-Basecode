@@ -7,7 +7,7 @@
 import * as crypto from "crypto";
 //import * as bcrypt from 'bcrypt-nodejs';
 
-import UserInterface from "../../../@Types/UserInterface";
+import UserInterface from "../../../types/UserInterface";
 import UserSchema from "./UserSchema";
 import mongoose from "../../../config/Database";
 
