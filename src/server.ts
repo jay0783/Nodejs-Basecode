@@ -60,6 +60,17 @@ class App {
 
     // for compression
     this.express.use(compression());
+    this.express.use(function (error: Error, req: any, res: any, next: any) {
+      if (error instanceof SyntaxError) {
+        res.json({
+          responseStatus: false,
+          responseCode: 500,
+          responseMessage: "Invalid Syntax",
+        });
+      } else {
+        next();
+      }
+    });
 
     // this.express.use((req, res, next) => {
     //   res.header('Access-Control-Allow-Origin', '*'); // dev only
