@@ -1,14 +1,13 @@
 import bcryptjs from "bcryptjs";
-import mongoose from "../../../config/Database";
+import mongoose from "../../config/Database";
 
 // Define the User Schema
-const UserSchema = new mongoose.Schema(
+const AdminSchema = new mongoose.Schema(
   {
     fullname: { type: String },
     email: { type: String },
-    mobile: { type: String },
     password: { type: String },
-    emailTime: { type: String, default: null },
+    emailTime: { type: String },
     // passwordResetToken: { type: String },
     // passwordResetExpires: Date,
 
@@ -27,13 +26,12 @@ const UserSchema = new mongoose.Schema(
     // picture: { type: String },
   },
   {
-    versionKey: false,
     timestamps: true,
   }
 );
 
-UserSchema.pre("save", function () {
+AdminSchema.pre("save", function () {
   this.password = bcryptjs.hashSync(this.password);
 });
 
-export default UserSchema;
+export default AdminSchema;

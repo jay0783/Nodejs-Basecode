@@ -8,7 +8,7 @@
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "prettier":"prettier --write src/",
+    "prettier": "prettier --write src/",
     "dev": "npm run prettier && nodemon --config nodemon.json --exec npx ts-node ./src/server.ts",
     "prod": "npm run build && node ./dist/server.js"
   },
