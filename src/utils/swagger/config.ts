@@ -1,11 +1,13 @@
-import swPaths from './paths';
-import swDefinitions from './definitions';
-const {paths} = new swPaths();
-const {definitions} = new swDefinitions();
-let host = process.env.HOST+':'+process.env.PORT
+import swPaths from "./paths";
+import swDefinitions from "./definitions";
+import swParameters from "./parameters";
+import Locals from "../../config/Locals";
+const { paths } = new swPaths();
+const { definitions } = new swDefinitions();
+const { parameters } = new swParameters();
+let host = process.env.HOST + ":" + process.env.PORT;
 
-
-module.exports = {
+export default {
   openapi: "3.0.0",
   info: {
     title: "SPACE-O MCQ API",
@@ -14,7 +16,7 @@ module.exports = {
   },
   servers: [
     {
-      url: `${config.APP_URL}/api/v1/`,
+      url: `${Locals.config().url}/api/`,
       description: "SWAGGER_BASE_URL",
     },
   ],
@@ -30,4 +32,4 @@ module.exports = {
     parameters: parameters,
   },
   paths: paths,
-}
+};

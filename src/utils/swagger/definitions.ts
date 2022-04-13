@@ -1,312 +1,110 @@
 export default class SwaggerDefinitions {
-    constructor() {}
-    definitions = {
-        UserSignupReqModel: {
-            properties: {
-                vFullName: {
-                    type: "string",
-                },
-                vEmail: {
-                  type: "string",
-                },
-                vPassword: {
-                  type: "string",
-                },
-                vPhoneCode: {
-                  type: "string",
-                },
-                vPhone: {
-                  type: "string",
-                },
-                vdevice_Token: {
-                  type: "string",
-                }
-            }
+  constructor() {}
+  definitions = {
+    CommonResponse: {
+      type: "object",
+      properties: {
+        responseStatus: {
+          type: "boolean",
         },
-        UserResModel: {
-            properties: {
-                code: {
-                  type: "integer"
-                },
-                message: {
-                  type: "string"
-                },
-                data: {
-                  type: "object",
-                  $ref: "#/definitions/UserResModelData"
-                }
-            } 
+        responseCode: {
+          type: "integer",
         },
-        UserResModelData: {
-            properties: {
-                userId: {
-                  type: "string"
-                },
-                vFullName: {
-                  type: "string"
-                },
-                vEmail: {
-                  type: "string"
-                },
-                vPhoneCode: {
-                  type: "string"
-                },
-                vPhone: {
-                  type: "string"
-                },
-                vProfilePic: {
-                  type: "string"
-                },
-                bisPhoneVerified: {
-                  type: "boolean"
-                },
-                bisEmailVerified: {
-                  type: "boolean"
-                },
-                vAccess_token: {
-                  type: "string"
-                }
-            }  
+
+        responseMessage: {
+          type: "string",
         },
-        UserLoginReqModel: {
-            properties: {
-                vEmail: {
-                  type: "string",
-                },
-                vPassword: {
-                  type: "string",
-                },
-                vdevice_Token: {
-                  type: "string",
-                }
-            }
+      },
+    },
+    UserRegistrationRequest: {
+      type: "object",
+      required: [
+        "first_name",
+        "last_name",
+        "email",
+        "mobile",
+        "candidate_type",
+      ],
+      properties: {
+        fullname: {
+          type: "string",
         },
-        VerifyOtpReqModel: {
-            properties: {
-              iEmailOtp: {
-                type: "integer"
-              },
-              vEmail: {
-                type: "string"
-              }
-            }
+        email: {
+          type: "string",
         },
-        ResendOtpReqModel: {
-            properties: {
-              vEmail: {
-                type: "string"
-              }
-            }
+        mobile: {
+          type: "string",
         },
-        UserForgotPasswordReqModel: {
-            properties: {
-              vEmail: {
-                type: "string",
-              }
-            }
+        password: {
+          type: "string",
+        }
+      },
+    },
+    UserRegistrationResponse: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
         },
-        ChangePasswordReqModel: {
-            properties: {
-              oldPassword: {
-                type: "string"
-              },
-              newPassword: {
-                type: "string"
-              },
-              cnfPassword: {
-                type: "string"
-              }
-            }
+        // {
+        //   properties: {
+        //     responseData: {
+        //       type: "object",
+        //       $ref: "#/components/schemas/RegistrationResponseFields",
+        //     },
+        //   },
+        // },
+      ],
+    },
+    RegistrationResponseFields: {
+      type: "object",
+      properties: {
+        access_token: {
+          type: "string",
         },
-        ProfileResModel: {
-            properties: {
-              code: {
-                type: "integer"
-              },
-              message: {
-                type: "string"
-              },
-              data: {
-                type: "object",
-                $ref: "#/definitions/ProfileResModelData"
-              }
-            }
+      },
+    },
+    UserLoginRequest: {
+      type: "object",
+      required: [
+        "email",
+        "password",
+      ],
+      properties: {
+        email: {
+          type: "string",
         },
-        ProfileResModelData: {
-            properties: {
-              userId: {
-                type: "string"
-              },
-              vFullName: {
-                type: "string"
-              },
-              vProfilePic: {
-                type: "string"
-              },
-              vEmail: {
-                type: "string"
-              }      
-            }
+        password: {
+          type: "string",
+        }
+      },
+    },
+    UserForgetPasswordRequest: {
+      type: "object",
+      required: [
+        "email",
+      ],
+      properties: {
+        email: {
+          type: "string",
+        }
+      },
+    },
+    UserResetPasswordRequest: {
+      type: "object",
+      required: [
+        "newPassword",
+        "ReEnterPassword"
+      ],
+      properties: {
+        newPassword: {
+          type: "string",
         },
-        UpdateProfileReqModel: {
-            properties: {
-                vFullName: {
-                  type: "string"
-                },
-                vEmail: {
-                  type: "string"
-                },
-                vPhoneCode: {
-                  type: "string"
-                },
-                vPhone: {
-                  type: "string"
-                },
-                vProfilePic: {
-                  type: "string"
-                }               
-            },
-        },
-        FbUserSignupReqModel: {
-            properties: {
-              token: {
-                type: "string"
-              },
-              vdevice_Token: {
-                type: "string",
-              }
-            }
-        },
-        GoogleUserSignupReqModel: {
-          properties: {
-            token: {
-              type: "string"
-            },
-            vdevice_Token: {
-              type: "string",
-            }
-          }
-        },
-        GetStaticContentsResModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "object",
-              $ref: "#/definitions/GetStaticContentsResModelData"
-            }
-          }
-        },
-        GetStaticContentsResModelData: {
-          properties: {
-            _id: {
-              type: "string"
-            },
-            vTitle: {
-              type: "string"
-            },
-            vSlug: {
-              type: "string"
-            },
-            txContent: {
-              type: "string"
-            },
-            tiIsActive: {
-              type: "number"
-            },
-            tiIsDeleted: {
-              type: "number"
-            },
-            updatedAt: {
-              type: "string"
-            },
-            createdAt: {
-              type: "string"
-            }
-          }
-        },
-        NotificationsModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "array",
-              items: {
-                type: "object",
-                $ref: "#/definitions/NotificationsModelData"
-              }
-            },
-            totalCount: {
-              type: "integer"
-            }
-          }
-        },
-        NotificationsModelData: {
-            properties: {
-              notificationId: {
-                type: "string"
-              },
-              iItemId: {
-                type: "string"
-              },
-              bIsread: {
-                type: "boolean"
-              },
-              vTitle: {
-                type: "string"
-              },
-              vMessage: {
-                type: "string"
-              },
-              createdAt: {
-                type: "string"
-              }    
-            }
-        },
-        SetNotificationFlagReqModel: {
-          properties: {
-            flagId: {
-              type: "integer"
-            },
-            tiIsActive: {
-              type: "string"
-            }
-          }
-        },
-        NotificationFlagsResModel: {
-          properties: {
-            code: {
-              type: "integer"
-            },
-            message: {
-              type: "string"
-            },
-            data: {
-              type: "object",
-              $ref: "#/definitions/NotificationFlagsResModelData"
-            }
-          }
-        },
-        NotificationFlagsResModelData: {
-          properties: {
-            bPush: {
-              type: "boolean"
-            },
-            bSms: {
-              type: "boolean"
-            },
-            bEmail: {
-              type: "boolean"
-            }
-          }
-        },
+        ReEnterPassword: {
+          type: "string",
+        }
+      },
     }
+    
+  };
 }
