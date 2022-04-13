@@ -8,9 +8,10 @@ import { Router } from "express";
 
 import AuthController from "../../../controllers/Api/v1/AuthController";
 import validator from "../../../middlewares/validator";
+import auth from "../../../middlewares/auth";
 
 const router = Router();
-
+router.use(auth.validateApiKey);
 router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("signup"), AuthController.signup);
 router.post(

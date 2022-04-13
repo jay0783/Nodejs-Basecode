@@ -9,6 +9,6 @@ import userApi from "./Api/v1/userApi";
 
 const router = Router();
 
-router.use("/api", userApi);
+router.use("/api/v1", userApi);
 
 export default router;

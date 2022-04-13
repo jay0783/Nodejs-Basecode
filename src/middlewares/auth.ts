@@ -2,7 +2,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
 import Helper from "../helpers/commonFunction";
-import { ReasonPhrases, StatusCodes } from "../utils/status-code/index";
+import { ReasonPhrases, StatusCodes } from "../utils/responses/index";
 
 class autorizationController {
   // API Authorization

@@ -37,7 +37,7 @@ export default class SwaggerDefinitions {
         },
         password: {
           type: "string",
-        }
+        },
       },
     },
     UserRegistrationResponse: {
@@ -66,45 +66,36 @@ export default class SwaggerDefinitions {
     },
     UserLoginRequest: {
       type: "object",
-      required: [
-        "email",
-        "password",
-      ],
+      required: ["email", "password"],
       properties: {
         email: {
           type: "string",
         },
         password: {
           type: "string",
-        }
+        },
       },
     },
     UserForgetPasswordRequest: {
       type: "object",
-      required: [
-        "email",
-      ],
+      required: ["email"],
       properties: {
         email: {
           type: "string",
-        }
+        },
       },
     },
     UserResetPasswordRequest: {
       type: "object",
-      required: [
-        "newPassword",
-        "ReEnterPassword"
-      ],
+      required: ["newPassword", "ReEnterPassword"],
       properties: {
         newPassword: {
           type: "string",
         },
         ReEnterPassword: {
           type: "string",
-        }
+        },
       },
-    }
-    
+    },
   };
 }

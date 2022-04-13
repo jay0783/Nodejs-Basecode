@@ -140,7 +140,7 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/_id",
-          }
+          },
         ],
 
         requestBody: {
