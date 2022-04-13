@@ -72,11 +72,32 @@ export default class AuthController extends BaseController {
       const user = await UserModel.findOne({
         email: req.body.email,
       });
-      res.json({
-        message: "User Login Successfully",
-      });
+      if(user){
+        res.send(
+          Helper.responseWithoutData(
+            true,
+            StatusCodes.OK,
+            ReasonPhrases.OK
+          )
+        );
+      }else{
+        res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
+      }
+      
     } catch {
-      res.status(400).send("error");
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
 
@@ -127,11 +148,21 @@ export default class AuthController extends BaseController {
                   },
                   (err, resu) => {
                     if (err) {
-                      return err;
+                      return res.send(
+                        Helper.responseWithoutData(
+                          false,
+                          StatusCodes.BAD_REQUEST,
+                          ReasonPhrases.BAD_REQUEST
+                        )
+                      );
                     } else {
-                      return res.send({
-                        message: "Email Sent",
-                      });
+                      return res.send(
+                        Helper.responseWithoutData(
+                          true,
+                          StatusCodes.OK,
+                          "Email Sent Successfully"
+                        )
+                      );
                     }
                   }
                 );
@@ -139,15 +170,34 @@ export default class AuthController extends BaseController {
             }
           );
         } else {
-          res.send("Invalid Email");
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
         }
       } else {
-        return res.send("cannot find email");
+        return res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
       }
     } catch (error) {
-      res.send(error.message);
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
+  
   public static async resetPassword(req: any, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
@@ -183,14 +233,32 @@ export default class AuthController extends BaseController {
                 new: true,
               }
             );
-            res.send("Password Successsfully Updated...");
+            res.send(
+              Helper.responseWithoutData(
+                true,
+                StatusCodes.OK,
+                "Password Updated Successfully"
+              )
+            );
           }
         } else {
-          return res.send("Expired");
+          return res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.FORBIDDEN,
+              ReasonPhrases.FORBIDDEN
+            )
+          );
         }
       }
     } catch (error) {
-      res.send("Internal Server Error");
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
 }

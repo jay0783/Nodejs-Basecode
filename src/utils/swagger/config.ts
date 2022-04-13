@@ -1,8 +1,10 @@
 import swPaths from "./paths";
 import swDefinitions from "./definitions";
+import swParameters from "./parameters";
 import Locals from "../../config/Locals";
 const { paths } = new swPaths();
 const { definitions } = new swDefinitions();
+const { parameters } = new swParameters();
 let host = process.env.HOST + ":" + process.env.PORT;
 
 export default {
@@ -14,7 +16,7 @@ export default {
   },
   servers: [
     {
-      url: `${Locals.config().url}/api/v1/`,
+      url: `${Locals.config().url}/api/`,
       description: "SWAGGER_BASE_URL",
     },
   ],
@@ -27,7 +29,7 @@ export default {
       },
     },
     schemas: definitions,
-    // parameters: parameters,
+    parameters: parameters,
   },
   paths: paths,
 };
