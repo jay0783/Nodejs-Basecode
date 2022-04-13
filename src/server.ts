@@ -8,7 +8,8 @@ import compression from "compression";
 import logger from "./utils/logger";
 import multer from "multer";
 import apiRouter from "./routes/index";
-import db from "./config/Database"
+import swaggerUi from "swagger-ui-express";
+import openApiDocumentation from "./utils/swagger/config";
 
 /**
  * Server class
@@ -76,6 +77,14 @@ class App {
     // this.express.use("/", (req, res) => {
     //   res.status(StatusCodes.BAD_REQUEST).send({ error: `path doesn't exist` });
     // });
+    this.express.use(
+      "/api-docs",
+      swaggerUi.serve,
+      swaggerUi.setup(openApiDocumentation)
+    );
+    this.express.get("/swagger.json", (req, res) =>
+      res.json(openApiDocumentation)
+    );
     this.express.use("/", apiRouter);
   }
 

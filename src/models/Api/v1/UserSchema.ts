@@ -4,7 +4,7 @@ import mongoose from "../../../config/Database";
 const UserSchema = new mongoose.Schema(
   {
     fullname: { type: String },
-    email: { type: String},
+    email: { type: String },
     mobile: { type: String },
     password: { type: String },
     emailTime: { type: String },
@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema(
     // steam: { type: String },
     // tokens: Array,
 
-    
     // gender: { type: String },
     // geolocation: { type: String },
     // website: { type: String },

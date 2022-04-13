@@ -27,5 +27,5 @@ export default interface UserInterface {
   passwordResetToken: string;
   passwordResetExpire: Date;
   picture: string;
-  emailTime: string
+  emailTime: string;
 }

@@ -12,9 +12,7 @@ import UserSchema from "./UserSchema";
 import mongoose from "../../../config/Database";
 
 // Create the model schema & register your custom methods here
-export interface UserModel extends UserInterface, mongoose.Document {
-
-}
+export interface UserModel extends UserInterface, mongoose.Document {}
 
 // Custom Methods
 
