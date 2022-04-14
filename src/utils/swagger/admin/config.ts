@@ -1,7 +1,7 @@
 import swPaths from "./paths";
 import swDefinitions from "./definitions";
 import swParameters from "./parameters";
-import Locals from "../../config/Locals";
+import Locals from "../../../config/Locals";
 const { paths } = new swPaths();
 const { definitions } = new swDefinitions();
 const { parameters } = new swParameters();
@@ -9,13 +9,13 @@ const { parameters } = new swParameters();
 export default {
   openapi: "3.0.0",
   info: {
-    title: "Nodejs Basecode",
+    title: "Admin API",
     version: "1.0.0",
-    description: "Nodejs Basecode",
+    description: "Nodejs Basecode ",
   },
   servers: [
     {
-      url: `${Locals.config().url}/api/v1/`,
+      url: `${Locals.config().url}/admin/`,
       description: "SWAGGER_BASE_URL",
     },
   ],

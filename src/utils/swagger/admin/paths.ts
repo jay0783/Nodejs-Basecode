@@ -3,8 +3,8 @@ export default class SwaggerPaths {
   paths = {
     "/signup": {
       post: {
-        tags: ["User"],
-        summary: "Used for user Registration",
+        tags: ["Admin"],
+        summary: "Used for Admin Registration",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -22,7 +22,7 @@ export default class SwaggerPaths {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/UserRegistrationRequest",
+                $ref: "#/components/schemas/AdminRegistrationRequest",
               },
             },
           },
@@ -44,8 +44,8 @@ export default class SwaggerPaths {
     },
     "/login": {
       post: {
-        tags: ["User"],
-        summary: "Used for user Login ",
+        tags: ["Admin"],
+        summary: "Used for Admin Login ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -63,7 +63,7 @@ export default class SwaggerPaths {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/UserLoginRequest",
+                $ref: "#/components/schemas/AdminLoginRequest",
               },
             },
           },
@@ -85,8 +85,8 @@ export default class SwaggerPaths {
     },
     "/forgetPassword": {
       post: {
-        tags: ["User"],
-        summary: "Used for forget password ",
+        tags: ["Admin"],
+        summary: "Used for Admin Login ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -104,7 +104,7 @@ export default class SwaggerPaths {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/UserForgetPasswordRequest",
+                $ref: "#/components/schemas/AdminForgetPasswordRequest",
               },
             },
           },
@@ -112,7 +112,7 @@ export default class SwaggerPaths {
 
         responses: {
           200: {
-            description: "return mail successfully sent",
+            description: "return candidate registration status",
             content: {
               "application/json": {
                 schema: {
@@ -126,8 +126,8 @@ export default class SwaggerPaths {
     },
     "/resetPassword/{_id}": {
       post: {
-        tags: ["User"],
-        summary: "Used for user to set new password ",
+        tags: ["Admin"],
+        summary: "Used for Admin Login ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -148,7 +148,7 @@ export default class SwaggerPaths {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/UserResetPasswordRequest",
+                $ref: "#/components/schemas/AdminResetPasswordRequest",
               },
             },
           },
@@ -156,7 +156,80 @@ export default class SwaggerPaths {
 
         responses: {
           200: {
-            description: "return password successfully updated",
+            description: "return candidate registration status",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/userList": {
+      get: {
+        tags: ["User-options"],
+        summary: "Used to get user list ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+        ],
+        responses: {
+          200: {
+            description: "return user list ",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserResponseList",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/editProfile/{_id}": {
+      post: {
+        tags: ["User-options"],
+        summary: "Used for edit user profile ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/_id",
+          },
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AdminRegistrationRequest",
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return user profile successfully updated",
             content: {
               "application/json": {
                 schema: {

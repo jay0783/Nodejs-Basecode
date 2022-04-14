@@ -7,6 +7,7 @@ import helmet from "helmet";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
 import openApiDocumentation from "./utils/swagger/config";
+import adminApiDocumentation from "./utils/swagger/admin/config";
 
 /**
  * Server class
@@ -86,14 +87,36 @@ class App {
     // this.express.use("/", (req, res) => {
     //   res.status(StatusCodes.BAD_REQUEST).send({ error: `path doesn't exist` });
     // });
+
+    const options = {
+      explorer: true,
+      swaggerOptions: {
+        url: `${process.env.APP_URL}:${process.env.SERVER_PORT}/apiswagger.json`,
+        // validatorUrl: null,
+      },
+    };
+    console.log(options);
+    
+    
+    this.express.use(
+      "/admin-docs",
+      swaggerUi.serveFiles(adminApiDocumentation),
+      swaggerUi.setup(adminApiDocumentation)
+    );
     this.express.use(
       "/api-docs",
-      swaggerUi.serve,
+      swaggerUi.serveFiles(openApiDocumentation),
       swaggerUi.setup(openApiDocumentation)
+      
     );
-    this.express.get("/swagger.json", (req, res) =>
+    this.express.get("/apiswagger.json", (req, res) =>
       res.json(openApiDocumentation)
     );
+    this.express.get("/adminswagger.json", (req, res) =>
+      res.json(adminApiDocumentation)
+    );
+
+
     this.express.use("/", apiRouter);
   }
 

@@ -20,7 +20,7 @@
 // 	tokenSecret?: string;
 // }
 
-export default interface UserInterface {
+export default interface AdminInterface {
   fullname: string;
   email: string;
   password: string;
