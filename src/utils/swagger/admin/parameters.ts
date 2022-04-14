@@ -41,12 +41,5 @@ export default class SwaggerParameters {
         type: "string",
       },
     },
-    _id: {
-      name: "_id",
-      in: "path",
-      schema: {
-        type: "string",
-      },
-    },
   };
 }

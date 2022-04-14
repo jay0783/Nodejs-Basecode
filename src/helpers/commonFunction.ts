@@ -29,7 +29,7 @@ class Helper {
   generate_Token(payload: any) {
     return jwt.sign(
       {
-        candidate_exam_uuid: payload,
+        _id: payload,
       },
       `${process.env.JWT_SECRETKEY}`,
       {

@@ -27,23 +27,37 @@ export default class AuthController extends BaseController {
       //     )
       //   );
       // }
-      const user = await new AdminModel(req.body).save();
+      const user = await AdminModel.findOne({
+        email: req.body.email,
+      });
       if (user) {
         res.send(
           Helper.responseWithoutData(
-            true,
-            StatusCodes.CREATED,
-            ReasonPhrases.CREATED
+            false,
+            StatusCodes.CONFLICT,
+            ReasonPhrases.CONFLICT
           )
         );
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        const newUser = await new AdminModel(req.body).save();
+
+        if (newUser) {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.CREATED,
+              ReasonPhrases.CREATED
+            )
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+        }
       }
     } catch (err) {
       res.send(
@@ -74,8 +88,9 @@ export default class AuthController extends BaseController {
         email: req.body.email,
       });
       if (user) {
+        const token = Helper.generate_Token(user._id);
         res.send(
-          Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
         );
       } else {
         res.send(
@@ -118,10 +133,11 @@ export default class AuthController extends BaseController {
       if (user) {
         if (user.email === req.body.email) {
           // console.log(user.email);
+          const token = Helper.generate_Token(user._id);
           req.body.time = new Date().getTime();
           let subject = "Reset Your Password";
           let text = `Dear User, Please verify your account by This link \n
-        either this email link http://localhost:4040/api/resetPassword/${user._id}\n This link will expires in 5 minutes`;
+        either this email link https://localhost:3000/changepassword/${token}\n This link will expires in 5 minutes`;
           Helper.sendMail(
             req.body.email,
             subject,
@@ -194,6 +210,54 @@ export default class AuthController extends BaseController {
     }
   }
 
+  public static async checkResetLink(req: any, res: any): Promise<any> {
+    try {
+      // const validationCheck = validationResult(req);
+
+      // if (!validationCheck.isEmpty()) {
+      //   return res.status(200).send(
+      //     Helper.responseWithoutData(
+      //       false,
+      //       StatusCodes.BAD_REQUEST,
+      //       //@ts-ignore
+      //       validationCheck.errors[0].msg
+      //     )
+      //   );
+      // }
+
+      if (req.token_payload) {
+        const id = req.token_payload._id;
+
+        let user = await AdminModel.findById(id);
+        if (user) {
+          //@ts-ignore
+          let linkTimeDifference = new Date().getTime() - user.emailTime;
+          if (linkTimeDifference < 3 * 60 * 1000) {
+            res.send(
+              Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+            );
+          } else {
+            res.send(
+              Helper.responseWithoutData(
+                false,
+                StatusCodes.UNAUTHORIZED,
+                ReasonPhrases.UNAUTHORIZED
+              )
+            );
+          }
+        }
+      }
+    } catch (error) {
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+  }
+
   public static async resetPassword(req: any, res: any): Promise<any> {
     try {
       // const validationCheck = validationResult(req);
@@ -208,44 +272,37 @@ export default class AuthController extends BaseController {
       //     )
       //   );
       // }
-      let user = await AdminModel.findOne({
-        _id: req.params._id,
-      });
-      if (user) {
-        //@ts-ignore
-        let linkTimeDifference = new Date().getTime() - user.emailTime;
-        if (linkTimeDifference < 3 * 60 * 1000) {
-          if (req.body.newPassword === req.body.ReEnterPassword) {
-            await AdminModel.findOneAndUpdate(
-              {
-                _id: req.params._id,
-              },
-              {
-                $set: {
-                  password: req.body.newPassword,
-                },
-              },
-              {
-                new: true,
-              }
-            );
-            res.send(
-              Helper.responseWithoutData(
-                true,
-                StatusCodes.OK,
-                "Password Updated Successfully"
-              )
-            );
-          }
-        } else {
-          return res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.FORBIDDEN,
-              ReasonPhrases.FORBIDDEN
-            )
-          );
+
+      const id = req.token_payload._id;
+
+      let user = await AdminModel.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            password: req.body.newPassword,
+          },
+        },
+        {
+          new: true,
         }
+      );
+      user.save();
+      if (user) {
+        res.send(
+          Helper.responseWithoutData(
+            true,
+            StatusCodes.OK,
+            "Password Updated Successfully"
+          )
+        );
+      } else {
+        return res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
       }
     } catch (error) {
       res.send(
@@ -257,6 +314,7 @@ export default class AuthController extends BaseController {
       );
     }
   }
+
   public static async userList(req: any, res: any): Promise<any> {
     try {
       // const validationCheck = validationResult(req);
@@ -311,7 +369,7 @@ export default class AuthController extends BaseController {
       // }
 
       let user = await UserModel.findByIdAndUpdate(
-        { _id: req.params._id },
+        { _id: req.body._id },
         req.body,
         { new: true }
       );

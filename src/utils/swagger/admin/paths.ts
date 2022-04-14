@@ -75,7 +75,7 @@ export default class SwaggerPaths {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/CommonResponse",
+                  $ref: "#/components/schemas/AdminLoginResponse",
                 },
               },
             },
@@ -124,10 +124,16 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword/{_id}": {
+    "/resetPassword": {
       post: {
         tags: ["Admin"],
         summary: "Used for Admin Login ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -139,7 +145,7 @@ export default class SwaggerPaths {
             $ref: "#/components/parameters/timestamp",
           },
           {
-            $ref: "#/components/parameters/_id",
+            $ref: "#/components/parameters/authToken",
           },
         ],
 
@@ -197,7 +203,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/editProfile/{_id}": {
+    "/editProfile": {
       post: {
         tags: ["User-options"],
         summary: "Used for edit user profile ",
@@ -211,9 +217,6 @@ export default class SwaggerPaths {
           {
             $ref: "#/components/parameters/timestamp",
           },
-          {
-            $ref: "#/components/parameters/_id",
-          },
         ],
 
         requestBody: {
@@ -221,7 +224,7 @@ export default class SwaggerPaths {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/AdminRegistrationRequest",
+                $ref: "#/components/schemas/AdminEditUserProfileRequest",
               },
             },
           },
@@ -230,6 +233,45 @@ export default class SwaggerPaths {
         responses: {
           200: {
             description: "return user profile successfully updated",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/checkResetLink": {
+      get: {
+        tags: ["Admin"],
+        summary: "Used for check reset password token is valid or not ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/authToken",
+          },
+        ],
+
+        responses: {
+          200: {
+            description: "return reset password token is valid or not",
             content: {
               "application/json": {
                 schema: {

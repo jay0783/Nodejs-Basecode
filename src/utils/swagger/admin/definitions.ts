@@ -18,13 +18,7 @@ export default class SwaggerDefinitions {
     },
     AdminRegistrationRequest: {
       type: "object",
-      required: [
-        "first_name",
-        "last_name",
-        "email",
-        "mobile",
-        "candidate_type",
-      ],
+      required: ["first_name", "last_name", "email", "candidate_type"],
       properties: {
         fullname: {
           type: "string",
@@ -32,7 +26,22 @@ export default class SwaggerDefinitions {
         email: {
           type: "string",
         },
-        mobile: {
+        password: {
+          type: "string",
+        },
+      },
+    },
+    AdminEditUserProfileRequest: {
+      type: "object",
+      required: ["_id", "first_name", "last_name", "email", "candidate_type"],
+      properties: {
+        _id: {
+          type: "string",
+        },
+        fullname: {
+          type: "string",
+        },
+        email: {
           type: "string",
         },
         password: {
@@ -40,29 +49,20 @@ export default class SwaggerDefinitions {
         },
       },
     },
-    AdminRegistrationResponse: {
+    AdminLoginResponse: {
       type: "object",
       allOf: [
         {
           $ref: "#/components/schemas/CommonResponse",
         },
-        // {
-        //   properties: {
-        //     responseData: {
-        //       type: "object",
-        //       $ref: "#/components/schemas/RegistrationResponseFields",
-        //     },
-        //   },
-        // },
-      ],
-    },
-    RegistrationResponseFields: {
-      type: "object",
-      properties: {
-        access_token: {
-          type: "string",
+        {
+          properties: {
+            responseData: {
+              type: "string",
+            },
+          },
         },
-      },
+      ],
     },
     AdminLoginRequest: {
       type: "object",

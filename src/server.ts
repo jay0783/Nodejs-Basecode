@@ -6,6 +6,8 @@ import multer from "multer";
 import helmet from "helmet";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
+import swaggerUi2 from "swagger-ui-express";
+
 import openApiDocumentation from "./utils/swagger/config";
 import adminApiDocumentation from "./utils/swagger/admin/config";
 
@@ -73,11 +75,12 @@ class App {
       }
     });
 
-    // this.express.use((req, res, next) => {
-    //   res.header('Access-Control-Allow-Origin', '*'); // dev only
-    //   res.header("Access-Control-Allow-Methods", "OPTIONS,GET,PUT,POST,DELETE");
-    //   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    // });
+    this.express.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*"); // dev only
+      res.header("Access-Control-Allow-Methods", "OPTIONS,GET,PUT,POST,DELETE");
+      res.header("Access-Control-Allow-Headers", "*");
+      next();
+    });
   }
 
   /**
@@ -95,17 +98,27 @@ class App {
         // validatorUrl: null,
       },
     };
-    console.log(options);
+    const options2 = {
+      explorer: true,
+      swaggerOptions: {
+        urls: [
+          {
+            url: `${process.env.APP_URL}:${process.env.SERVER_PORT}/adminswagger.json`,
+          }
+        ]
+      }
+    }
+    // console.log(options);
 
     this.express.use(
       "/admin-docs",
       swaggerUi.serveFiles(adminApiDocumentation),
-      swaggerUi.setup(adminApiDocumentation)
+      swaggerUi.setup(adminApiDocumentation,options2)
     );
     this.express.use(
       "/api-docs",
       swaggerUi.serveFiles(openApiDocumentation),
-      swaggerUi.setup(openApiDocumentation)
+      swaggerUi2.setup(null, options)
     );
     this.express.get("/apiswagger.json", (req, res) =>
       res.json(openApiDocumentation)
