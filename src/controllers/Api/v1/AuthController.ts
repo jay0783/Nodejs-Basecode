@@ -26,23 +26,37 @@ export default class AuthController extends BaseController {
           )
         );
       }
-      const user = await new UserModel(req.body).save();
+      const user = await UserModel.findOne({
+        email: req.body.email,
+      });
       if (user) {
         res.send(
           Helper.responseWithoutData(
-            true,
-            StatusCodes.CREATED,
-            ReasonPhrases.CREATED
+            false,
+            StatusCodes.CONFLICT,
+            ReasonPhrases.CONFLICT
           )
         );
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        const newUser = await new UserModel(req.body).save();
+
+        if (newUser) {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.CREATED,
+              ReasonPhrases.CREATED
+            )
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+        }
       }
     } catch (err) {
       res.send(
@@ -73,8 +87,9 @@ export default class AuthController extends BaseController {
         email: req.body.email,
       });
       if (user) {
+        const token = Helper.generate_Token(user._id);
         res.send(
-          Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
         );
       } else {
         res.send(
@@ -207,9 +222,9 @@ export default class AuthController extends BaseController {
           )
         );
       }
-      let user = await UserModel.findOne({
-        _id: req.params._id,
-      });
+
+      const id = req.token_payload._id;
+      let user = await UserModel.findOne(id);
       if (user) {
         //@ts-ignore
         let linkTimeDifference = new Date().getTime() - user.emailTime;
@@ -217,7 +232,7 @@ export default class AuthController extends BaseController {
           if (req.body.newPassword === req.body.ReEnterPassword) {
             await UserModel.findOneAndUpdate(
               {
-                _id: req.params._id,
+                _id: req.token_payload._id,
               },
               {
                 $set: {

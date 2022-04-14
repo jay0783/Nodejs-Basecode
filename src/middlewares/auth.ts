@@ -50,7 +50,7 @@ class autorizationController {
 
   verifyjwtToken = (req: any, res: any, next: any) => {
     let token = req.headers["authorization"];
-    // console.log("==========> token :" + token);
+    console.log("==========> token :" + token);
     if (!token) {
       return res
         .status(200)
@@ -66,13 +66,6 @@ class autorizationController {
       // token = token.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
       // console.log("-------->" + JSON.stringify(decoded));
-      let carrentTime: string = new Date()
-        .getTime()
-        //@ts-ignore
-        .toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
-      //@ts-ignore
-      carrentTime = parseInt(carrentTime.replaceAll(",", ""));
-      // console.log(carrentTime)
 
       req.token_payload = decoded;
     } catch (err) {
