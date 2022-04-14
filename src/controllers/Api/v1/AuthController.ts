@@ -290,11 +290,11 @@ export default class AuthController extends BaseController {
     email: email,
   });
   // console.log("user ====> " + user);
-  if (user.password !== null) {
+  // if (user.password !== null) {
 
-    const user = 
+  //   const user = 
 
-  }
+  // }
 
   }catch(ex){
     console.log({message : ex.message});
