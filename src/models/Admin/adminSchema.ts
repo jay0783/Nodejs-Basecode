@@ -7,6 +7,7 @@ const AdminSchema = new mongoose.Schema(
     fullname: { type: String },
     email: { type: String },
     password: { type: String },
+    adminSocial : { type: mongoose.Schema.Types.ObjectId, ref: 'adminSocial' },
     emailTime: { type: String },
     // passwordResetToken: { type: String },
     // passwordResetExpires: Date,
