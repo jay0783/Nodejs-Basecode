@@ -96,8 +96,7 @@ class App {
       },
     };
     console.log(options);
-    
-    
+
     this.express.use(
       "/admin-docs",
       swaggerUi.serveFiles(adminApiDocumentation),
@@ -107,7 +106,6 @@ class App {
       "/api-docs",
       swaggerUi.serveFiles(openApiDocumentation),
       swaggerUi.setup(openApiDocumentation)
-      
     );
     this.express.get("/apiswagger.json", (req, res) =>
       res.json(openApiDocumentation)
@@ -115,7 +113,6 @@ class App {
     this.express.get("/adminswagger.json", (req, res) =>
       res.json(adminApiDocumentation)
     );
-
 
     this.express.use("/", apiRouter);
   }
