@@ -7,9 +7,12 @@ import BaseController from "./BaseController";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
+
 import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController extends BaseController {
   public static async signup(req: any, res: any): Promise<any> {
@@ -256,4 +259,32 @@ export default class AuthController extends BaseController {
       );
     }
   }
+
+  public static async googleLogin(req : any, res:  any): Promise<any> {
+  try{
+    const token = req.headers["access-token"];
+  const ticket = await client.verifyIdToken({
+    idToken: token
+  });
+  const payload = ticket.getPayload();
+  const {name, email, sub}= payload;
+  // If request specified a G Suite domain:
+  // const domain = payload['hd'];
+  // console.log(payload);
+  const user = await UserModel.findOne({
+    email: email,
+  });
+  // console.log("user ====> " + user);
+  if (user.password !== null) {
+
+    const user = 
+
+  }
+
+  }catch(ex){
+    console.log({message : ex.message});
+  }
+    
+
+}
 }
