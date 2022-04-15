@@ -103,19 +103,15 @@ class App {
     const options2 = {
       explorer: true,
       swaggerOptions: {
-        urls: [
-          {
-            url: `${process.env.APP_URL}:${process.env.SERVER_PORT}/adminswagger.json`,
-          }
-        ]
-      }
-    }
+        url: `${process.env.APP_URL}:${process.env.SERVER_PORT}/adminswagger.json`,
+      },
+    };
     // console.log(options);
 
     this.express.use(
       "/admin-docs",
       swaggerUi.serveFiles(adminApiDocumentation),
-      swaggerUi.setup(adminApiDocumentation,options2)
+      swaggerUi.setup(undefined, options2)
     );
     this.express.use(
       "/api-docs",

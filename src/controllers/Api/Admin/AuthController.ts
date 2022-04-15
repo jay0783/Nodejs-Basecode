@@ -15,18 +15,18 @@ import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 export default class AuthController extends BaseController {
   public static async signup(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
+      const validationCheck = validationResult(req);
 
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
       const user = await AdminModel.findOne({
         email: req.body.email,
       });
@@ -72,18 +72,18 @@ export default class AuthController extends BaseController {
 
   public static async login(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
+      const validationCheck = validationResult(req);
 
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
       const user = await AdminModel.findOne({
         email: req.body.email,
       });
@@ -114,18 +114,18 @@ export default class AuthController extends BaseController {
 
   public static async forgetPassword(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
+      const validationCheck = validationResult(req);
 
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
       const user = await AdminModel.findOne({
         email: req.body.email,
       });
@@ -212,19 +212,6 @@ export default class AuthController extends BaseController {
 
   public static async checkResetLink(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
-
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
-
       if (req.token_payload) {
         const id = req.token_payload._id;
 
@@ -260,18 +247,18 @@ export default class AuthController extends BaseController {
 
   public static async resetPassword(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
+      const validationCheck = validationResult(req);
 
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
 
       const id = req.token_payload._id;
 
@@ -317,18 +304,6 @@ export default class AuthController extends BaseController {
 
   public static async userList(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
-
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
       let user = await UserModel.find({});
       if (user) {
         res.send(
@@ -355,18 +330,18 @@ export default class AuthController extends BaseController {
   }
   public static async editProfile(req: any, res: any): Promise<any> {
     try {
-      // const validationCheck = validationResult(req);
+      const validationCheck = validationResult(req);
 
-      // if (!validationCheck.isEmpty()) {
-      //   return res.status(200).send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       //@ts-ignore
-      //       validationCheck.errors[0].msg
-      //     )
-      //   );
-      // }
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
 
       let user = await UserModel.findByIdAndUpdate(
         { _id: req.body._id },
