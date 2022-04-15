@@ -32,9 +32,13 @@ router.get(
 );
 router.post(
   "/resetPassword",
-  auth.verifyjwtToken,
   validator("resetPassword"),
   AuthController.resetPassword
+);
+router.post(
+  "/editPassword",
+  validator("editPassword"),
+  AuthController.editPassword
 );
 
 export default router;

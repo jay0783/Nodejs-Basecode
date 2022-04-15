@@ -128,12 +128,6 @@ export default class SwaggerPaths {
       post: {
         tags: ["Admin"],
         summary: "Used for Admin Login ",
-        security: [
-          {
-            //@ts-ignore
-            apiAuth: [],
-          },
-        ],
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -143,10 +137,7 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
-          },
-          {
-            $ref: "#/components/parameters/authToken",
-          },
+          }
         ],
 
         requestBody: {

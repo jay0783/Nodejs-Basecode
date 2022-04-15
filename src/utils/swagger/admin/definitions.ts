@@ -10,7 +10,6 @@ export default class SwaggerDefinitions {
         responseCode: {
           type: "integer",
         },
-
         responseMessage: {
           type: "string",
         },
@@ -33,7 +32,7 @@ export default class SwaggerDefinitions {
     },
     AdminEditUserProfileRequest: {
       type: "object",
-      required: ["_id", "first_name", "last_name", "email", "candidate_type"],
+      required: ["_id", "fullname", "email", "mobile"],
       properties: {
         _id: {
           type: "string",
@@ -44,7 +43,7 @@ export default class SwaggerDefinitions {
         email: {
           type: "string",
         },
-        password: {
+        mobile: {
           type: "string",
         },
       },
@@ -87,8 +86,11 @@ export default class SwaggerDefinitions {
     },
     AdminResetPasswordRequest: {
       type: "object",
-      required: ["newPassword", "ReEnterPassword"],
+      required: ["Authorization", "newPassword", "ReEnterPassword"],
       properties: {
+        Authorization: {
+          type: "string",
+        },
         newPassword: {
           type: "string",
         },

@@ -6,6 +6,7 @@
 import BaseController from "./BaseController";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import bcryptjs from "bcryptjs";
 
 import AdminModel from "../../../models/Admin/adminModel";
 import UserModel from "../../../models/Api/v1/UserModel";
@@ -27,10 +28,10 @@ export default class AuthController extends BaseController {
           )
         );
       }
-      const user = await AdminModel.findOne({
+      const admin = await AdminModel.findOne({
         email: req.body.email,
       });
-      if (user) {
+      if (admin) {
         res.send(
           Helper.responseWithoutData(
             false,
@@ -39,9 +40,9 @@ export default class AuthController extends BaseController {
           )
         );
       } else {
-        const newUser = await new AdminModel(req.body).save();
+        const newAdmin = await new AdminModel(req.body).save();
 
-        if (newUser) {
+        if (newAdmin) {
           res.send(
             Helper.responseWithoutData(
               true,
@@ -88,16 +89,34 @@ export default class AuthController extends BaseController {
         email: req.body.email,
       });
       if (user) {
-        const token = Helper.generate_Token(user._id);
-        res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
-        );
+        if (
+          user.email == req.body.email &&
+          bcryptjs.compareSync(req.body.password, user.password)
+        ) {
+          const token = Helper.generate_Token(user._id);
+          res.send(
+            Helper.responseWithData(
+              true,
+              StatusCodes.OK,
+              ReasonPhrases.OK,
+              token
+            )
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              "Invalid Credentials"
+            )
+          );
+        }
       } else {
         res.send(
           Helper.responseWithoutData(
             false,
             StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
+            "Invalid Credentials"
           )
         );
       }
@@ -126,14 +145,14 @@ export default class AuthController extends BaseController {
           )
         );
       }
-      const user = await AdminModel.findOne({
+      const admin = await AdminModel.findOne({
         email: req.body.email,
       });
-      // console.log("user ====> " + user);
-      if (user) {
-        if (user.email === req.body.email) {
-          // console.log(user.email);
-          const token = Helper.generate_Token(user._id);
+      // console.log("admin ====> " + admin);
+      if (admin) {
+        if (admin.email === req.body.email) {
+          // console.log(admin.email);
+          const token = Helper.generate_Token(admin._id);
           req.body.time = new Date().getTime();
           let subject = "Reset Your Password";
           let text = `Dear User, Please verify your account by This link \n
@@ -215,10 +234,10 @@ export default class AuthController extends BaseController {
       if (req.token_payload) {
         const id = req.token_payload._id;
 
-        let user = await AdminModel.findById(id);
-        if (user) {
+        let admin = await AdminModel.findById(id);
+        if (admin) {
           //@ts-ignore
-          let linkTimeDifference = new Date().getTime() - user.emailTime;
+          let linkTimeDifference = new Date().getTime() - admin.emailTime;
           if (linkTimeDifference < 3 * 60 * 1000) {
             res.send(
               Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
@@ -260,9 +279,25 @@ export default class AuthController extends BaseController {
         );
       }
 
+      let Authorization = req.body.Authorization;
+      if (!Authorization) {
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+      } else {
+        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        req.token_payload = decoded;
+      }
+
       const id = req.token_payload._id;
 
-      let user = await AdminModel.findByIdAndUpdate(
+      let admin = await AdminModel.findByIdAndUpdate(
         id,
         {
           $set: {
@@ -273,8 +308,8 @@ export default class AuthController extends BaseController {
           new: true,
         }
       );
-      user.save();
-      if (user) {
+      admin.save();
+      if (admin) {
         res.send(
           Helper.responseWithoutData(
             true,
@@ -304,10 +339,10 @@ export default class AuthController extends BaseController {
 
   public static async userList(req: any, res: any): Promise<any> {
     try {
-      let user = await UserModel.find({});
-      if (user) {
+      let admin = await UserModel.find({});
+      if (admin) {
         res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, user)
+          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, admin)
         );
       } else {
         res.send(
@@ -343,12 +378,12 @@ export default class AuthController extends BaseController {
         );
       }
 
-      let user = await UserModel.findByIdAndUpdate(
+      let admin = await UserModel.findByIdAndUpdate(
         { _id: req.body._id },
         req.body,
         { new: true }
       );
-      if (user) {
+      if (admin) {
         res.send(
           Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
         );
@@ -361,6 +396,98 @@ export default class AuthController extends BaseController {
           )
         );
       }
+    } catch (error) {
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+  }
+  public static async editPassword(req: any, res: any): Promise<any> {
+    try {
+      const validationCheck = validationResult(req);
+
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
+
+      const id = req.token_payload._id;
+
+      const adminn = await AdminModel.findById(id);
+      if (adminn) {
+        if (adminn.password === req.body.oldPassword) {
+          AdminModel.findByIdAndUpdate(
+            id,
+            {
+              $set: {
+                password: req.body.newPassword,
+              },
+            },
+            {
+              new: true,
+            }
+          );
+          res.send(
+            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.BAD_REQUEST,
+              "Invalid Current Password"
+            )
+          );
+        }
+      } else {
+        res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
+      }
+
+      // let admin = await AdminModel.findByIdAndUpdate(
+      //   id,
+      //   {
+      //     $set: {
+      //       password: req.body.newPassword,
+      //     },
+      //   },
+      //   {
+      //     new: true,
+      //   }
+      // );
+      // admin.save();
+      // if (admin) {
+      //   res.send(
+      //     Helper.responseWithoutData(
+      //       true,
+      //       StatusCodes.OK,
+      //       "Password Updated Successfully"
+      //     )
+      //   );
+      // } else {
+      //   return res.send(
+      //     Helper.responseWithoutData(
+      //       false,
+      //       StatusCodes.BAD_REQUEST,
+      //       ReasonPhrases.BAD_REQUEST
+      //     )
+      //   );
+      // }
     } catch (error) {
       res.send(
         Helper.responseWithoutData(

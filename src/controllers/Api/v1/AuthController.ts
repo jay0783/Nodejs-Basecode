@@ -6,6 +6,7 @@
 import BaseController from "./BaseController";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import bcryptjs from "bcryptjs";
 
 import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
@@ -34,7 +35,7 @@ export default class AuthController extends BaseController {
           Helper.responseWithoutData(
             false,
             StatusCodes.CONFLICT,
-            ReasonPhrases.CONFLICT
+            "EmailID is already Exist"
           )
         );
       } else {
@@ -45,7 +46,7 @@ export default class AuthController extends BaseController {
             Helper.responseWithoutData(
               true,
               StatusCodes.CREATED,
-              ReasonPhrases.CREATED
+              "Signup Successfull"
             )
           );
         } else {
@@ -87,16 +88,34 @@ export default class AuthController extends BaseController {
         email: req.body.email,
       });
       if (user) {
-        const token = Helper.generate_Token(user._id);
-        res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
-        );
-      } else {
+        if (
+          user.email == req.body.email &&
+          bcryptjs.compareSync(req.body.password, user.password)
+        ) {
+          const token = Helper.generate_Token(user._id);
+          res.send(
+            Helper.responseWithData(
+              true,
+              StatusCodes.OK,
+              ReasonPhrases.OK,
+              token
+            )
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              "Invalid Credentials"
+            )
+          );
+        }
+      }else{
         res.send(
           Helper.responseWithoutData(
             false,
             StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
+            "Invalid Credentials"
           )
         );
       }
@@ -142,7 +161,13 @@ export default class AuthController extends BaseController {
             text,
             (error: any, result: any) => {
               if (error) {
-                return error;
+                return res.send(
+                  Helper.responseWithoutData(
+                    false,
+                    StatusCodes.INTERNAL_SERVER_ERROR,
+                    ReasonPhrases.INTERNAL_SERVER_ERROR
+                  )
+                );;
               } else {
                 UserModel.findOneAndUpdate(
                   {
@@ -184,7 +209,7 @@ export default class AuthController extends BaseController {
             Helper.responseWithoutData(
               false,
               StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
+              "Invalid Credentials"
             )
           );
         }
@@ -193,7 +218,7 @@ export default class AuthController extends BaseController {
           Helper.responseWithoutData(
             false,
             StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
+            "EmailID is not Registered"
           )
         );
       }
@@ -260,6 +285,14 @@ export default class AuthController extends BaseController {
             )
           );
         }
+      }else{
+        return res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            "User Not Found"
+          )
+        );
       }
     } catch (error) {
       res.send(

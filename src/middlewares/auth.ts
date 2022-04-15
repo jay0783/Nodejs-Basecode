@@ -50,7 +50,7 @@ class autorizationController {
 
   verifyjwtToken = (req: any, res: any, next: any) => {
     let token = req.headers["authorization"];
-    console.log("==========> token :" + token);
+    // console.log("==========> token :" + token);
     if (!token) {
       return res
         .status(200)
