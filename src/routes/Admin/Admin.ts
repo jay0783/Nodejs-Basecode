@@ -25,16 +25,20 @@ router.post(
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.get(
+router.post(
   "/checkResetLink",
-  auth.verifyjwtToken,
   AuthController.checkResetLink
 );
 router.post(
   "/resetPassword",
-  auth.verifyjwtToken,
   validator("resetPassword"),
   AuthController.resetPassword
+);
+router.post(
+  "/editPassword",
+  validator("editPassword"),
+  auth.verifyjwtToken,
+  AuthController.editPassword
 );
 
 export default router;

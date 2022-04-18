@@ -112,7 +112,7 @@ export default class SwaggerPaths {
 
         responses: {
           200: {
-            description: "return mail successfully sent",
+            description: "return candidate registration status",
             content: {
               "application/json": {
                 schema: {
@@ -124,10 +124,10 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword/{_id}": {
+    "/checkResetLink": {
       post: {
         tags: ["User"],
-        summary: "Used for user to set new password ",
+        summary: "Used for check reset password token is valid or not ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -137,9 +137,52 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
+          }
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  Authorization: {
+                    type: "string"
+                  }
+                }
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return reset password token is valid or not",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/resetPassword": {
+      post: {
+        tags: ["User"],
+        summary: "Used for Reset Password ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
           },
           {
-            $ref: "#/components/parameters/_id",
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
           },
         ],
 
@@ -156,7 +199,7 @@ export default class SwaggerPaths {
 
         responses: {
           200: {
-            description: "return password successfully updated",
+            description: "return candidate registration status",
             content: {
               "application/json": {
                 schema: {

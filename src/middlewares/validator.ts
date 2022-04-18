@@ -146,6 +146,25 @@ export default function validate(methodName: String) {
           .withMessage("Mobile num must be 10 characters long"),
       ];
     }
+    case "editPassword": {
+      return [
+        body("oldPassword")
+          .notEmpty()
+          .withMessage("newPassword is required")
+          .isLength({ min: 8, max: 15 })
+          .withMessage("newPassword must be 8 characters long"),
+        body("newPassword")
+          .notEmpty()
+          .withMessage("newPassword is required")
+          .isLength({ min: 8, max: 15 })
+          .withMessage("newPassword must be 8 characters long"),
+        body("ReEnterPassword")
+          .notEmpty()
+          .withMessage("ReEnterPassword is required")
+          .isLength({ min: 8, max: 15 })
+          .withMessage("ReEnterPassword must be 8 characters long"),
+      ];
+    }
     default: {
       return [body("invalid Method")];
     }

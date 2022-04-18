@@ -87,8 +87,11 @@ export default class SwaggerDefinitions {
     },
     UserResetPasswordRequest: {
       type: "object",
-      required: ["newPassword", "ReEnterPassword"],
+      required: ["Authorization", "newPassword", "ReEnterPassword"],
       properties: {
+        Authorization: {
+          type: "string",
+        },
         newPassword: {
           type: "string",
         },

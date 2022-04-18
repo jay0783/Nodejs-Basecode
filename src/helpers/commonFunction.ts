@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import nodeMailer from "nodemailer";
+import logger from "../utils/logger";
 class Helper {
   responseWithData(
     responseStatus: Boolean,
@@ -53,10 +54,10 @@ class Helper {
     };
     transporter.sendMail(options, (error, result) => {
       if (error) {
-        console.log("Error:", error.message);
+        logger.error("Error:", error.message);
         cb(error, null);
       } else {
-        console.log("Mail sent:", result.response);
+        logger.info("Mail sent:", result.response);
         cb(null, result.response);
       }
     });
