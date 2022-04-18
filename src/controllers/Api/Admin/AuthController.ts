@@ -131,6 +131,7 @@ export default class AuthController extends BaseController {
       });
       // console.log("user ====> " + user);
       if (user) {
+        //@ts-ignore
         if (user.email === req.body.email) {
           // console.log(user.email);
           const token = Helper.generate_Token(user._id);
@@ -158,7 +159,7 @@ export default class AuthController extends BaseController {
                   {
                     new: true,
                   },
-                  (err, resu) => {
+                  (err: any, resu: any) => {
                     if (err) {
                       return res.send(
                         Helper.responseWithoutData(

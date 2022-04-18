@@ -4,6 +4,7 @@ import compression from "compression";
 import logger from "./utils/logger";
 import multer from "multer";
 import helmet from "helmet";
+import database from "./config/Database";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
 import swaggerUi2 from "swagger-ui-express";
@@ -20,7 +21,7 @@ class App {
   constructor() {
     // create Express server
     this.express = express();
-
+    this.connectDb();
     this.mountDotEnv();
     this.listen();
     // configure the middleware
@@ -34,7 +35,9 @@ class App {
   //   this.app.set("views", express.static(__dirname+ "views"))
   //   this.app.set("view engine", "jade")
   // }
-
+  private connectDb(): void {
+    database.init();
+  }
   private mountDotEnv(): void {
     this.express = Locals.init(this.express);
   }
@@ -104,16 +107,16 @@ class App {
         urls: [
           {
             url: `${process.env.APP_URL}:${process.env.SERVER_PORT}/adminswagger.json`,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    };
     // console.log(options);
 
     this.express.use(
       "/admin-docs",
       swaggerUi.serveFiles(adminApiDocumentation),
-      swaggerUi.setup(adminApiDocumentation,options2)
+      swaggerUi.setup(adminApiDocumentation, options2)
     );
     this.express.use(
       "/api-docs",

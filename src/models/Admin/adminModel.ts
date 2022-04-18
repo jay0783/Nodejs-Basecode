@@ -1,12 +1,12 @@
 import * as crypto from "crypto";
 //import * as bcrypt from 'bcrypt-nodejs';
 
+import mongoose from "mongoose";
 import AdminInterface from "../../types/AdminInterface";
 import AdminSchema from "./adminSchema";
-import mongoose from "../../config/Database";
 
 // Create the model schema & register your custom methods here
-export interface AdminModel extends AdminInterface, mongoose.Document {}
+// export interface AdminModel extends AdminInterface, mongoose.Document {}
 
 // Custom Methods
 
@@ -17,6 +17,6 @@ export interface AdminModel extends AdminInterface, mongoose.Document {}
 //      });
 //  };
 
-const User = mongoose.model<AdminModel>("Admin", AdminSchema);
+const User = mongoose.model("Admin", AdminSchema);
 
 export default User;

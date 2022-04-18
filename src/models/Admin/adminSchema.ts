@@ -1,5 +1,5 @@
 import bcryptjs from "bcryptjs";
-import mongoose from "../../config/Database";
+import mongoose from "mongoose";
 
 // Define the User Schema
 const AdminSchema = new mongoose.Schema(

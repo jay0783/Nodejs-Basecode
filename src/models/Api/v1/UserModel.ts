@@ -7,12 +7,12 @@
 import * as crypto from "crypto";
 //import * as bcrypt from 'bcrypt-nodejs';
 
+import mongoose from "mongoose";
 import UserInterface from "../../../types/UserInterface";
 import UserSchema from "./UserSchema";
-import mongoose from "../../../config/Database";
 
 // Create the model schema & register your custom methods here
-export interface UserModel extends UserInterface, mongoose.Document {}
+// export interface UserModel extends UserInterface, mongoose.Document {}
 
 // Custom Methods
 
@@ -23,6 +23,6 @@ export interface UserModel extends UserInterface, mongoose.Document {}
 //      });
 //  };
 
-const User = mongoose.model<UserModel>("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 export default User;
