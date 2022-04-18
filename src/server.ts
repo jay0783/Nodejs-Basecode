@@ -1,12 +1,10 @@
-/**
- * @author Smit <smits.spaceo@gmail.com>
- */
-
 import express from "express";
 import Locals from "./config/Locals";
 import compression from "compression";
 import logger from "./utils/logger";
 import multer from "multer";
+import helmet from "helmet";
+import database from "./config/Database";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
 import swaggerUi2 from "swagger-ui-express";
@@ -23,7 +21,7 @@ class App {
   constructor() {
     // create Express server
     this.express = express();
-
+    this.connectDb();
     this.mountDotEnv();
     this.listen();
     // configure the middleware
@@ -37,7 +35,9 @@ class App {
   //   this.app.set("views", express.static(__dirname+ "views"))
   //   this.app.set("view engine", "jade")
   // }
-
+  private connectDb(): void {
+    database.init();
+  }
   private mountDotEnv(): void {
     this.express = Locals.init(this.express);
   }
@@ -59,6 +59,7 @@ class App {
 
     // for parsing application/x-www-form-urlencoded
     this.express.use(express.urlencoded({ extended: true }));
+    this.express.use(helmet());
 
     // for parsing multipart/form-data
     this.express.use(multer().any());

@@ -9,10 +9,11 @@ import mongoose from "mongoose";
 import Locals from "./Locals";
 import logger from "../utils/logger";
 
-export class Database {
+export default class Database {
   // Initialize your database pool
   public static init(): any {
     const dsn = Locals.config().mongooseUrl;
+    console.log(dsn);
 
     // use native ES6 promises instead of mongoose promise library
     (<any>mongoose).Promise = global.Promise;
@@ -31,6 +32,6 @@ export class Database {
       });
   }
 }
-Database.init();
+// Database.init();
 
-export default mongoose;
+// export default mongoose;

@@ -180,7 +180,7 @@ export default class AuthController {
                   {
                     new: true,
                   },
-                  (err, resu) => {
+                  (err: any, resu: any) => {
                     if (err) {
                       return res.send(
                         Helper.responseWithoutData(

@@ -9,8 +9,13 @@ import bcryptjs from "bcryptjs";
 import { Request, Response } from "express";
 
 import UserModel from "../../../models/Api/v1/UserModel";
+import userSocialModel from "../../../models/Api/v1/userSocialModel";
+import fetch from "node-fetch";
+
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController {
   public static async signup(req: Request, res: Response): Promise<any> {
@@ -151,6 +156,7 @@ export default class AuthController {
         email: req.body.email,
       });
       if (user) {
+        //@ts-ignore
         if (user.email === req.body.email) {
           // console.log(user.email);
           const token = Helper.generate_Token(user._id);

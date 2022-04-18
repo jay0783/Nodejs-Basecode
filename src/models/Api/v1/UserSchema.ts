@@ -1,5 +1,6 @@
 import bcryptjs from "bcryptjs";
-import mongoose from "../../../config/Database";
+import mongoose from "mongoose";
+import userSocialModel from "./userSocialModel";
 
 // Define the User Schema
 const UserSchema = new mongoose.Schema(
@@ -8,6 +9,10 @@ const UserSchema = new mongoose.Schema(
     email: { type: String },
     mobile: { type: String },
     password: { type: String },
+    socialLogin: [
+      { type: mongoose.Schema.Types.ObjectId, ref: userSocialModel },
+    ],
+    loginType: { type: Number, default: 0 }, //0 : Normal , 1 : Social
     emailTime: { type: String, default: null },
     // passwordResetToken: { type: String },
     // passwordResetExpires: Date,
@@ -32,8 +37,8 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-UserSchema.pre("save", function () {
-  this.password = bcryptjs.hashSync(this.password);
-});
+// UserSchema.pre("save", function () {
+//   this.password = bcryptjs.hashSync(this.password);
+// });
 
 export default UserSchema;
