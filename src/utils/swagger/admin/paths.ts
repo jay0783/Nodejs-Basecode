@@ -3,7 +3,7 @@ export default class SwaggerPaths {
   paths = {
     "/signup": {
       post: {
-        tags: ["Admin"],
+        tags: ["Authentication"],
         summary: "Used for Admin Registration",
         parameters: [
           {
@@ -44,7 +44,7 @@ export default class SwaggerPaths {
     },
     "/login": {
       post: {
-        tags: ["Admin"],
+        tags: ["Authentication"],
         summary: "Used for Admin Login ",
         parameters: [
           {
@@ -83,9 +83,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/forgetPassword": {
+    "/forget-password": {
       post: {
-        tags: ["Admin"],
+        tags: ["Authentication"],
         summary: "Used for Admin forget password ",
         parameters: [
           {
@@ -124,9 +124,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/checkResetLink": {
-      post: {
-        tags: ["Admin"],
+    "/check-reset-link/{resetPasswordToken}": {
+      get: {
+        tags: ["Authentication"],
         summary: "Used for check reset password token is valid or not ",
         parameters: [
           {
@@ -137,24 +137,11 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
-          }
-        ],
-
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  Authorization: {
-                    type: "string"
-                  }
-                }
-              },
-            },
           },
-        },
+          {
+            $ref: "#/components/parameters/resetPasswordToken",
+          },
+        ],
 
         responses: {
           200: {
@@ -170,9 +157,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword": {
+    "/reset-password": {
       post: {
-        tags: ["Admin"],
+        tags: ["Authentication"],
         summary: "Used for Admin reset password ",
         parameters: [
           {
@@ -185,17 +172,6 @@ export default class SwaggerPaths {
             $ref: "#/components/parameters/timestamp",
           },
         ],
-
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AdminResetPasswordRequest",
-              },
-            },
-          },
-        },
 
         responses: {
           200: {
@@ -211,7 +187,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/userList": {
+    "/user-list": {
       get: {
         tags: ["User-options"],
         summary: "Used to get user list ",
@@ -240,9 +216,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/editProfile": {
+    "/edit-profile": {
       post: {
-        tags: ["User-options"],
+        tags: ["Authentication"],
         summary: "Used for edit user profile ",
         parameters: [
           {
@@ -281,9 +257,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/editPassword": {
+    "/edit-password": {
       post: {
-        tags: ["Admin"],
+        tags: ["Authentication"],
         summary: "Used for edit password ",
         security: [
           {

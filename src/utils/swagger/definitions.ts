@@ -40,20 +40,19 @@ export default class SwaggerDefinitions {
         },
       },
     },
-    UserRegistrationResponse: {
+    UserLoginResponse: {
       type: "object",
       allOf: [
         {
           $ref: "#/components/schemas/CommonResponse",
         },
-        // {
-        //   properties: {
-        //     responseData: {
-        //       type: "object",
-        //       $ref: "#/components/schemas/RegistrationResponseFields",
-        //     },
-        //   },
-        // },
+        {
+          properties: {
+            responseData: {
+              type: "string"
+            },
+          },
+        },
       ],
     },
     RegistrationResponseFields: {
@@ -100,5 +99,21 @@ export default class SwaggerDefinitions {
         },
       },
     },
+    UserEditPasswordRequest: {
+      type: "object",
+      required: ["oldPassword", "newPassword", "ReEnterPassword"],
+      properties: {
+        oldPassword: {
+          type: "string",
+        },
+        newPassword: {
+          type: "string",
+        },
+        ReEnterPassword: {
+          type: "string",
+        },
+      },
+    },
+    
   };
 }

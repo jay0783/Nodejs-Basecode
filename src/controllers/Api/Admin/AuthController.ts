@@ -6,6 +6,7 @@
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
+import { Request, Response } from "express";
 
 import AdminModel from "../../../models/Admin/adminModel";
 import UserModel from "../../../models/Api/v1/UserModel";
@@ -13,7 +14,7 @@ import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 
 export default class AuthController {
-  public static async signup(req: any, res: any): Promise<any> {
+  public static async signup(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -70,7 +71,7 @@ export default class AuthController {
     }
   }
 
-  public static async login(req: any, res: any): Promise<any> {
+  public static async login(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -130,7 +131,10 @@ export default class AuthController {
     }
   }
 
-  public static async forgetPassword(req: any, res: any): Promise<any> {
+  public static async forgetPassword(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -228,10 +232,13 @@ export default class AuthController {
     }
   }
 
-  public static async checkResetLink(req: any, res: any): Promise<any> {
+  public static async checkResetLink(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
-      let Authorization = req.body.Authorization;
-      if (!Authorization) {
+      let resetPasswordToken = req.params.resetPasswordToken;
+      if (!resetPasswordToken) {
         return res
           .status(200)
           .send(
@@ -242,30 +249,34 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        const decoded = jwt.verify(
+          resetPasswordToken,
+          process.env.JWT_SECRETKEY
+        );
+        //@ts-ignore
         req.token_payload = decoded;
       }
+      //@ts-ignore
 
       const id = req.token_payload._id;
 
-
-        let admin = await AdminModel.findById(id);
-        if (admin) {
-          //@ts-ignore
-          let linkTimeDifference = new Date().getTime() - admin.emailTime;
-          if (linkTimeDifference < 3 * 60 * 1000) {
-            res.send(
-              Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-            );
-          } else {
-            res.send(
-              Helper.responseWithoutData(
-                false,
-                StatusCodes.UNAUTHORIZED,
-                ReasonPhrases.UNAUTHORIZED
-              )
-            );
-          }
+      let admin = await AdminModel.findById(id);
+      if (admin) {
+        //@ts-ignore
+        let linkTimeDifference = new Date().getTime() - admin.emailTime;
+        if (linkTimeDifference < 3 * 60 * 1000) {
+          res.send(
+            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.UNAUTHORIZED,
+              ReasonPhrases.UNAUTHORIZED
+            )
+          );
+        }
       }
     } catch (error) {
       res.send(
@@ -278,7 +289,7 @@ export default class AuthController {
     }
   }
 
-  public static async resetPassword(req: any, res: any): Promise<any> {
+  public static async resetPassword(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -305,9 +316,12 @@ export default class AuthController {
             )
           );
       } else {
+        //@ts-ignore
         const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        //@ts-ignore
         req.token_payload = decoded;
       }
+      //@ts-ignore
 
       const id = req.token_payload._id;
 
@@ -315,14 +329,13 @@ export default class AuthController {
         id,
         {
           $set: {
-            password: req.body.newPassword,
+            password: bcryptjs.hashSync(req.body.newPassword),
           },
         },
         {
           new: true,
         }
       );
-      admin.save();
       if (admin) {
         res.send(
           Helper.responseWithoutData(
@@ -351,7 +364,7 @@ export default class AuthController {
     }
   }
 
-  public static async userList(req: any, res: any): Promise<any> {
+  public static async userList(req: Request, res: Response): Promise<any> {
     try {
       let admin = await UserModel.find({});
       if (admin) {
@@ -378,7 +391,7 @@ export default class AuthController {
     }
   }
 
-  public static async editProfile(req: any, res: any): Promise<any> {
+  public static async editProfile(req: Request, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -422,7 +435,7 @@ export default class AuthController {
     }
   }
 
-  public static async editPassword(req: any, res: any): Promise<any> {
+  public static async editPassword(req: Request, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -436,15 +449,15 @@ export default class AuthController {
           )
         );
       }
+      //@ts-ignore
 
-      console.log(req.body);
       const id = req.token_payload._id;
-      
+
       const admin = await AdminModel.findById(id);
-      
+
       if (admin) {
         if (bcryptjs.compareSync(req.body.oldPassword, admin.password)) {
-         await AdminModel.findByIdAndUpdate(
+          await AdminModel.findByIdAndUpdate(
             id,
             {
               $set: {

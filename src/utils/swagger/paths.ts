@@ -3,7 +3,7 @@ export default class SwaggerPaths {
   paths = {
     "/signup": {
       post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         summary: "Used for user Registration",
         parameters: [
           {
@@ -44,7 +44,7 @@ export default class SwaggerPaths {
     },
     "/login": {
       post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         summary: "Used for user Login ",
         parameters: [
           {
@@ -75,7 +75,7 @@ export default class SwaggerPaths {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/CommonResponse",
+                  $ref: "#/components/schemas/UserLoginResponse",
                 },
               },
             },
@@ -83,9 +83,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/forgetPassword": {
+    "/forget-password": {
       post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         summary: "Used for forget password ",
         parameters: [
           {
@@ -124,9 +124,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/checkResetLink": {
-      post: {
-        tags: ["User"],
+    "/check-reset-link/{resetPasswordToken}": {
+      get: {
+        tags: ["Authentication"],
         summary: "Used for check reset password token is valid or not ",
         parameters: [
           {
@@ -137,24 +137,11 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
-          }
-        ],
-
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  Authorization: {
-                    type: "string"
-                  }
-                }
-              },
-            },
           },
-        },
+          {
+            $ref: "#/components/parameters/resetPasswordToken",
+          },
+        ],
 
         responses: {
           200: {
@@ -170,9 +157,9 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword": {
+    "/reset-password": {
       post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         summary: "Used for Reset Password ",
         parameters: [
           {
@@ -200,6 +187,56 @@ export default class SwaggerPaths {
         responses: {
           200: {
             description: "return candidate registration status",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/edit-password": {
+      post: {
+        tags: ["Authentication"],
+        summary: "Used for edit password ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/authToken",
+          },
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UserEditPasswordRequest",
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return user profile successfully updated",
             content: {
               "application/json": {
                 schema: {

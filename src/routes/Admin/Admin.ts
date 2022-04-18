@@ -14,28 +14,28 @@ const router = Router();
 router.use(auth.validateApiKey);
 router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("adminSignup"), AuthController.signup);
-router.get("/userList", AuthController.userList);
+router.get("/user-list", AuthController.userList);
 router.post(
-  "/editProfile",
+  "/edit-profile",
   validator("editProfile"),
   AuthController.editProfile
 );
 router.post(
-  "/forgetPassword",
+  "/forget-password",
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.post(
-  "/checkResetLink",
+router.get(
+  "/check-reset-link/:resetPasswordToken",
   AuthController.checkResetLink
 );
 router.post(
-  "/resetPassword",
+  "/reset-password",
   validator("resetPassword"),
   AuthController.resetPassword
 );
 router.post(
-  "/editPassword",
+  "/edit-password",
   validator("editPassword"),
   auth.verifyjwtToken,
   AuthController.editPassword

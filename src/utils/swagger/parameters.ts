@@ -40,5 +40,13 @@ export default class SwaggerParameters {
         type: "string",
       },
     },
+    resetPasswordToken: {
+      name: "resetPasswordToken",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
   };
 }

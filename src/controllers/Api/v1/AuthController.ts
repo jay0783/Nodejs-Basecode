@@ -6,13 +6,14 @@
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
+import { Request, Response } from "express";
 
 import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 
 export default class AuthController {
-  public static async signup(req: any, res: any): Promise<any> {
+  public static async signup(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -69,7 +70,7 @@ export default class AuthController {
     }
   }
 
-  public static async login(req: any, res: any): Promise<any> {
+  public static async login(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -129,7 +130,10 @@ export default class AuthController {
     }
   }
 
-  public static async forgetPassword(req: any, res: any): Promise<any> {
+  public static async forgetPassword(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -226,10 +230,13 @@ export default class AuthController {
     }
   }
 
-  public static async checkResetLink(req: any, res: any): Promise<any> {
+  public static async checkResetLink(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
-      let Authorization = req.body.Authorization;
-      if (!Authorization) {
+      let resetPasswordToken = req.params.resetPasswordToken;
+      if (!resetPasswordToken) {
         return res
           .status(200)
           .send(
@@ -240,29 +247,43 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        const decoded = jwt.verify(
+          resetPasswordToken,
+          process.env.JWT_SECRETKEY
+        );
+        //@ts-ignore
         req.token_payload = decoded;
       }
+      //@ts-ignore
 
       const id = req.token_payload._id;
 
-        let user = await UserModel.findById(id);
-        if (user) {
-          //@ts-ignore
-          let linkTimeDifference = new Date().getTime() - user.emailTime;
-          if (linkTimeDifference < 3 * 60 * 1000) {
-            res.send(
-              Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-            );
-          } else {
-            res.send(
-              Helper.responseWithoutData(
-                false,
-                StatusCodes.UNAUTHORIZED,
-                ReasonPhrases.UNAUTHORIZED
-              )
-            );
-          }
+      let user = await UserModel.findById(id);
+
+      if (user) {
+        //@ts-ignore
+        let linkTimeDifference = new Date().getTime() - user.emailTime;
+        if (linkTimeDifference < 3 * 60 * 1000) {
+          res.send(
+            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.UNAUTHORIZED,
+              ReasonPhrases.UNAUTHORIZED
+            )
+          );
+        }
+      } else {
+        res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
       }
     } catch (error) {
       res.send(
@@ -275,7 +296,7 @@ export default class AuthController {
     }
   }
 
-  public static async resetPassword(req: any, res: any): Promise<any> {
+  public static async resetPassword(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck = validationResult(req);
 
@@ -303,8 +324,11 @@ export default class AuthController {
           );
       } else {
         const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        //@ts-ignore
+
         req.token_payload = decoded;
       }
+      //@ts-ignore
 
       const id = req.token_payload._id;
 
@@ -330,6 +354,72 @@ export default class AuthController {
         );
       } else {
         return res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
+      }
+    } catch (error) {
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+  }
+
+  public static async editPassword(req: Request, res: Response): Promise<any> {
+    try {
+      const validationCheck = validationResult(req);
+
+      if (!validationCheck.isEmpty()) {
+        return res.status(200).send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            //@ts-ignore
+            validationCheck.errors[0].msg
+          )
+        );
+      }
+
+      //@ts-ignore
+
+      const id = req.token_payload._id;
+
+      const user = await UserModel.findById(id);
+
+      if (user) {
+        if (bcryptjs.compareSync(req.body.oldPassword, user.password)) {
+          await UserModel.findByIdAndUpdate(
+            id,
+            {
+              $set: {
+                password: bcryptjs.hashSync(req.body.newPassword),
+              },
+            },
+            {
+              new: true,
+            }
+          );
+          res.send(
+            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+        }
+      } else {
+        res.send(
           Helper.responseWithoutData(
             false,
             StatusCodes.BAD_REQUEST,

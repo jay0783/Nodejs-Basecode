@@ -110,6 +110,7 @@ export default class SwaggerDefinitions {
             responseData: {
               type: "array",
               items: {
+                type: "object",
                 $ref: "#/components/schemas/UserResponseFields",
               },
             },

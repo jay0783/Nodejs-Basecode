@@ -68,7 +68,7 @@ class autorizationController {
       // console.log("-------->" + JSON.stringify(decoded));
 
       req.token_payload = decoded;
-    } catch (err) {      
+    } catch (err) {
       return res
         .status(200)
         .send(
