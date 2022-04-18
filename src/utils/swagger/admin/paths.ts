@@ -86,7 +86,7 @@ export default class SwaggerPaths {
     "/forgetPassword": {
       post: {
         tags: ["Admin"],
-        summary: "Used for Admin Login ",
+        summary: "Used for Admin forget password ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -124,10 +124,10 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword": {
+    "/checkResetLink": {
       post: {
         tags: ["Admin"],
-        summary: "Used for Admin Login ",
+        summary: "Used for check reset password token is valid or not ",
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -138,6 +138,52 @@ export default class SwaggerPaths {
           {
             $ref: "#/components/parameters/timestamp",
           }
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  Authorization: {
+                    type: "string"
+                  }
+                }
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return reset password token is valid or not",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/resetPassword": {
+      post: {
+        tags: ["Admin"],
+        summary: "Used for Admin reset password ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
         ],
 
         requestBody: {
@@ -235,10 +281,10 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/checkResetLink": {
-      get: {
+    "/editPassword": {
+      post: {
         tags: ["Admin"],
-        summary: "Used for check reset password token is valid or not ",
+        summary: "Used for edit password ",
         security: [
           {
             //@ts-ignore
@@ -260,9 +306,20 @@ export default class SwaggerPaths {
           },
         ],
 
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AdminEditPasswordRequest",
+              },
+            },
+          },
+        },
+
         responses: {
           200: {
-            description: "return reset password token is valid or not",
+            description: "return user profile successfully updated",
             content: {
               "application/json": {
                 schema: {

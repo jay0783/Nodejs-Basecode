@@ -143,5 +143,20 @@ export default class SwaggerDefinitions {
         },
       },
     },
+    AdminEditPasswordRequest: {
+      type: "object",
+      required: ["oldPassword", "newPassword", "ReEnterPassword"],
+      properties: {
+        oldPassword: {
+          type: "string",
+        },
+        newPassword: {
+          type: "string",
+        },
+        ReEnterPassword: {
+          type: "string",
+        },
+      },
+    },
   };
 }

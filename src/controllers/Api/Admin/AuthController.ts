@@ -3,7 +3,6 @@
  *
  * @author Sameer <sameerp.spaceo@gmail.com>
  */
-import BaseController from "./BaseController";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
@@ -13,7 +12,7 @@ import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 
-export default class AuthController extends BaseController {
+export default class AuthController {
   public static async signup(req: any, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
@@ -231,8 +230,24 @@ export default class AuthController extends BaseController {
 
   public static async checkResetLink(req: any, res: any): Promise<any> {
     try {
-      if (req.token_payload) {
-        const id = req.token_payload._id;
+      let Authorization = req.body.Authorization;
+      if (!Authorization) {
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+      } else {
+        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        req.token_payload = decoded;
+      }
+
+      const id = req.token_payload._id;
+
 
         let admin = await AdminModel.findById(id);
         if (admin) {
@@ -251,7 +266,6 @@ export default class AuthController extends BaseController {
               )
             );
           }
-        }
       }
     } catch (error) {
       res.send(
@@ -363,6 +377,7 @@ export default class AuthController extends BaseController {
       );
     }
   }
+
   public static async editProfile(req: any, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
@@ -406,6 +421,7 @@ export default class AuthController extends BaseController {
       );
     }
   }
+
   public static async editPassword(req: any, res: any): Promise<any> {
     try {
       const validationCheck = validationResult(req);
@@ -421,16 +437,18 @@ export default class AuthController extends BaseController {
         );
       }
 
+      console.log(req.body);
       const id = req.token_payload._id;
-
-      const adminn = await AdminModel.findById(id);
-      if (adminn) {
-        if (adminn.password === req.body.oldPassword) {
-          AdminModel.findByIdAndUpdate(
+      
+      const admin = await AdminModel.findById(id);
+      
+      if (admin) {
+        if (bcryptjs.compareSync(req.body.oldPassword, admin.password)) {
+         await AdminModel.findByIdAndUpdate(
             id,
             {
               $set: {
-                password: req.body.newPassword,
+                password: bcryptjs.hashSync(req.body.newPassword),
               },
             },
             {
@@ -458,36 +476,6 @@ export default class AuthController extends BaseController {
           )
         );
       }
-
-      // let admin = await AdminModel.findByIdAndUpdate(
-      //   id,
-      //   {
-      //     $set: {
-      //       password: req.body.newPassword,
-      //     },
-      //   },
-      //   {
-      //     new: true,
-      //   }
-      // );
-      // admin.save();
-      // if (admin) {
-      //   res.send(
-      //     Helper.responseWithoutData(
-      //       true,
-      //       StatusCodes.OK,
-      //       "Password Updated Successfully"
-      //     )
-      //   );
-      // } else {
-      //   return res.send(
-      //     Helper.responseWithoutData(
-      //       false,
-      //       StatusCodes.BAD_REQUEST,
-      //       ReasonPhrases.BAD_REQUEST
-      //     )
-      //   );
-      // }
     } catch (error) {
       res.send(
         Helper.responseWithoutData(
