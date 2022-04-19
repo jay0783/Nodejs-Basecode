@@ -16,26 +16,26 @@ router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("adminSignup"), AuthController.signup);
 router.post("/google-login", AuthController.googleLogin);
 router.post("/facebook-login", AuthController.facebookLogin);
-router.get("/userList", AuthController.userList);
+router.get("/user-list", AuthController.userList);
 router.get("/user-count", AuthController.userCount);
 router.post(
-  "/editProfile",
+  "/edit-profile",
   validator("editProfile"),
   AuthController.editProfile
 );
 router.post(
-  "/forgetPassword",
+  "/forget-password",
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.post("/checkResetLink", AuthController.checkResetLink);
+router.post("/check-reset-link", AuthController.checkResetLink);
 router.post(
-  "/resetPassword",
+  "/reset-password",
   validator("resetPassword"),
   AuthController.resetPassword
 );
 router.post(
-  "/editPassword",
+  "/edit-password",
   validator("editPassword"),
   auth.verifyjwtToken,
   AuthController.editPassword

@@ -83,7 +83,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/forgetPassword": {
+    "/forget-password": {
       post: {
         tags: ["Admin"],
         summary: "Used for Admin forget password ",
@@ -124,7 +124,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/checkResetLink": {
+    "/check-reset-link": {
       post: {
         tags: ["Admin"],
         summary: "Used for check reset password token is valid or not ",
@@ -170,7 +170,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/resetPassword": {
+    "/reset-password": {
       post: {
         tags: ["Admin"],
         summary: "Used for Admin reset password ",
@@ -211,7 +211,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/userList": {
+    "/user-list": {
       get: {
         tags: ["User-options"],
         summary: "Used to get user list ",
@@ -240,7 +240,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/editProfile": {
+    "/edit-profile": {
       post: {
         tags: ["User-options"],
         summary: "Used for edit user profile ",
@@ -281,7 +281,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/editPassword": {
+    "/edit-password": {
       post: {
         tags: ["Admin"],
         summary: "Used for edit password ",

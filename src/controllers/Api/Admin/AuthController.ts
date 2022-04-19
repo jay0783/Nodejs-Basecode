@@ -160,7 +160,7 @@ export default class AuthController {
       if (admin) {
         if (admin.email === req.body.email) {
           const token = Helper.generate_Token(admin._id);
-          req.body.time = new Date().getTime();
+          let time = new Date().getTime();
           let subject = "Reset Your Password";
           let text = `Dear User, Please verify your account by This link \n
         either this email link https://localhost:3000/changepassword/${token}\n This link will expires in 5 minutes`;
@@ -178,7 +178,7 @@ export default class AuthController {
                   },
                   {
                     $set: {
-                      emailTime: req.body.time,
+                      emailTime: time,
                     },
                   },
                   {

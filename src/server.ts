@@ -7,6 +7,7 @@ import helmet from "helmet";
 import database from "./config/Database";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 import openApiDocumentation from "./utils/swagger/config";
 import adminApiDocumentation from "./utils/swagger/admin/config";
@@ -47,6 +48,7 @@ class App {
     // if (process.env.NODE_ENV === "development") {
     // }
     // for parsing application/json
+    this.express.use(cors());
     this.express.use(
       express.json({
         limit: "1mb",
@@ -115,7 +117,6 @@ class App {
       swaggerUi.setup(undefined, options2)
     );
 
-    console.log(swaggerUi.setup(null, options));
     this.express.use(
       "/api-docs",
       swaggerUi.serveFiles(openApiDocumentation),
