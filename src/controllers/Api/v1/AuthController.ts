@@ -3,34 +3,35 @@
  *
  * @author Sameer <sameerp.spaceo@gmail.com>
  */
+import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
-import { Request, Response } from "express";
+import { OAuth2Client } from "google-auth-library";
+import fetch from "node-fetch";
 
 import UserModel from "../../../models/Api/v1/UserModel";
 import userSocialModel from "../../../models/Api/v1/userSocialModel";
-import fetch from "node-fetch";
 
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
-import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController {
   public static async signup(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const user = await UserModel.findOne({
         email: req.body.email,
@@ -77,17 +78,18 @@ export default class AuthController {
 
   public static async login(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const user = await UserModel.findOne({
         email: req.body.email,
@@ -143,23 +145,23 @@ export default class AuthController {
     res: Response
   ): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const user = await UserModel.findOne({
         email: req.body.email,
       });
       if (user) {
-        //@ts-ignore
         if (user.email === req.body.email) {
           // console.log(user.email);
           const token = Helper.generate_Token(user._id);
@@ -264,13 +266,10 @@ export default class AuthController {
         req.token_payload = decoded;
       }
       //@ts-ignore
-
       const id = req.token_payload._id;
 
       let user = await UserModel.findById(id);
-
       if (user) {
-        //@ts-ignore
         let linkTimeDifference = new Date().getTime() - user.emailTime;
         if (linkTimeDifference < 3 * 60 * 1000) {
           res.send(
@@ -307,17 +306,18 @@ export default class AuthController {
 
   public static async resetPassword(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
 
       let Authorization = req.body.Authorization;
@@ -465,11 +465,9 @@ export default class AuthController {
         email: email,
       }).populate("socialLogin");
       // console.log("user found ==>" + JSON.stringify(isExistingUser));
-      //@ts-ignore
       if (isExistingUser) {
         //if user already exists
         if (
-          //@ts-ignore
           isExistingUser.loginType == 0 && //@ts-ignore
           isExistingUser.socialLogin.length <= 0 //if user exists and user has normally signed up
         ) {
@@ -494,7 +492,6 @@ export default class AuthController {
           );
         } else {
           //when user email is found but the user has social logins in account
-          //@ts-ignore
           let gId = isExistingUser.socialLogin.find(
             (socialAcc: any) => socialAcc.socialId === sub
           );
@@ -562,7 +559,7 @@ export default class AuthController {
     }
   }
 
-  public static async facebookLogin(req: any, res: any): Promise<any> {
+  public static async facebookLogin(req: Request, res: Response): Promise<any> {
     try {
       // const token = req.headers["access-token"];
       const token = req.body.accessToken;
@@ -582,7 +579,6 @@ export default class AuthController {
           const userWithSocial = await UserModel.findOne({
             email: payload.email,
           }).populate("socialLogin");
-          //@ts-ignore
           let fId = userWithSocial.socialLogin.find(
             (socialAcc: any) => socialAcc.socialId === id
           );

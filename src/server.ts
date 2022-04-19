@@ -7,7 +7,6 @@ import helmet from "helmet";
 import database from "./config/Database";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
-import swaggerUi2 from "swagger-ui-express";
 
 import openApiDocumentation from "./utils/swagger/config";
 import adminApiDocumentation from "./utils/swagger/admin/config";
@@ -101,6 +100,7 @@ class App {
         // validatorUrl: null,
       },
     };
+
     const options2 = {
       explorer: true,
       swaggerOptions: {
@@ -114,11 +114,14 @@ class App {
       swaggerUi.serveFiles(adminApiDocumentation),
       swaggerUi.setup(undefined, options2)
     );
+
+    console.log(swaggerUi.setup(null, options));
     this.express.use(
       "/api-docs",
       swaggerUi.serveFiles(openApiDocumentation),
-      swaggerUi2.setup(null, options)
+      swaggerUi.setup(null, options)
     );
+
     this.express.get("/apiswagger.json", (req, res) =>
       res.json(openApiDocumentation)
     );
