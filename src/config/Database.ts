@@ -1,10 +1,3 @@
-/**
- * Define Database connection
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
-// import * as mongoose from "mongoose";
 import mongoose from "mongoose";
 import Locals from "./Locals";
 import logger from "../utils/logger";
@@ -33,5 +26,3 @@ export default class Database {
   }
 }
 // Database.init();
-
-// export default mongoose;

@@ -17,19 +17,20 @@ import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
 const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController {
-  public static async signup(req: any, res: any): Promise<any> {
+  public static async signup(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const admin = await AdminModel.findOne({
         email: req.body.email,
@@ -74,27 +75,27 @@ export default class AuthController {
     }
   }
 
-  public static async login(req: any, res: any): Promise<any> {
+  public static async login(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const user = await AdminModel.findOne({
         email: req.body.email,
       });
       if (user) {
         if (
-          //@ts-ignore
-          user.email == req.body.email && //@ts-ignore
+          user.email == req.body.email &&
           bcryptjs.compareSync(req.body.password, user.password)
         ) {
           const token = Helper.generate_Token(user._id);
@@ -135,27 +136,29 @@ export default class AuthController {
     }
   }
 
-  public static async forgetPassword(req: any, res: any): Promise<any> {
+  public static async forgetPassword(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
       const admin: any = await AdminModel.findOne({
         email: req.body.email,
       });
-      // console.log("admin ====> " + admin);
       if (admin) {
         if (admin.email === req.body.email) {
-          // console.log(admin.email);
           const token = Helper.generate_Token(admin._id);
           req.body.time = new Date().getTime();
           let subject = "Reset Your Password";
@@ -233,7 +236,10 @@ export default class AuthController {
     }
   }
 
-  public static async checkResetLink(req: any, res: any): Promise<any> {
+  public static async checkResetLink(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     try {
       let Authorization = req.body.Authorization;
       if (!Authorization) {
@@ -248,14 +254,14 @@ export default class AuthController {
           );
       } else {
         const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        //@ts-ignore
         req.token_payload = decoded;
       }
-
+      //@ts-ignore
       const id = req.token_payload._id;
 
       let admin = await AdminModel.findById(id);
       if (admin) {
-        //@ts-ignore
         let linkTimeDifference = new Date().getTime() - admin.emailTime;
         if (linkTimeDifference < 3 * 60 * 1000) {
           res.send(
@@ -282,19 +288,20 @@ export default class AuthController {
     }
   }
 
-  public static async resetPassword(req: any, res: any): Promise<any> {
+  public static async resetPassword(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
 
       let Authorization = req.body.Authorization;
@@ -310,9 +317,10 @@ export default class AuthController {
           );
       } else {
         const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        //@ts-ignore
         req.token_payload = decoded;
       }
-
+      //@ts-ignore
       const id = req.token_payload._id;
 
       let admin = await AdminModel.findByIdAndUpdate(
@@ -355,7 +363,7 @@ export default class AuthController {
     }
   }
 
-  public static async userList(req: any, res: any): Promise<any> {
+  public static async userList(req: Request, res: Response): Promise<any> {
     try {
       let admin = await UserModel.find({});
       if (admin) {
@@ -382,19 +390,46 @@ export default class AuthController {
     }
   }
 
-  public static async editProfile(req: any, res: any): Promise<any> {
+  public static async userCount(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
-
-      if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
+      const userCount = await UserModel.count();
+      return res
+        .status(200)
+        .send(
+          Helper.responseWithData(
+            true,
+            StatusCodes.OK,
+            ReasonPhrases.OK,
+            userCount
           )
         );
+    } catch (ex) {
+      return res
+        .status(200)
+        .send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            ex.message
+          )
+        );
+    }
+  }
+
+  public static async editProfile(req: Request, res: Response): Promise<any> {
+    try {
+      const validationCheck: any = validationResult(req);
+
+      if (!validationCheck.isEmpty()) {
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
 
       let admin = await UserModel.findByIdAndUpdate(
@@ -426,22 +461,23 @@ export default class AuthController {
     }
   }
 
-  public static async editPassword(req: any, res: any): Promise<any> {
+  public static async editPassword(req: Request, res: Response): Promise<any> {
     try {
-      const validationCheck = validationResult(req);
+      const validationCheck: any = validationResult(req);
 
       if (!validationCheck.isEmpty()) {
-        return res.status(200).send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            //@ts-ignore
-            validationCheck.errors[0].msg
-          )
-        );
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
       }
 
-      console.log(req.body);
+      //@ts-ignore
       const id = req.token_payload._id;
 
       const admin: any = await AdminModel.findById(id);
@@ -495,23 +531,20 @@ export default class AuthController {
     try {
       // const token = req.headers["access-token"];
       const token = req.body.accessToken;
-      console.log("token =====>>>" + token);
       const ticket = await client.verifyIdToken({
         idToken: token,
       });
       const payload = ticket.getPayload();
-      console.log("payload===>>>." + payload);
       const { name, email, sub } = payload;
 
       //checking if user already exists
       const isExistingUser = await AdminModel.findOne({
         email: email,
       }).populate("socialLogin");
-      // console.log("user found ==>" + JSON.stringify(isExistingUser));
       if (isExistingUser) {
         //if user already exists
         if (
-          isExistingUser.loginType == 0 && //@ts-ignore
+          isExistingUser.loginType == 0 &&
           isExistingUser.socialLogin.length <= 0 //if user exists and user has normally signed up
         ) {
           const socialAccount = await new AdminSocialModel({
@@ -588,10 +621,6 @@ export default class AuthController {
         );
       }
     } catch (ex) {
-      console.log(
-        "=============================>>>>>>>>>>>>" +
-          JSON.stringify({ message: ex.message })
-      );
       return res.send(
         Helper.responseWithoutData(
           true,
@@ -663,7 +692,6 @@ export default class AuthController {
           //   socialId: id,
           //   type: 1,
           // }).save();
-
           const createUser = await new AdminModel({
             fullname: name,
             loginType: 1,
@@ -681,16 +709,19 @@ export default class AuthController {
           );
         }
       } else {
-        const socialAccount = await new AdminSocialModel({
+        const socialAcc = await new AdminSocialModel({
           socialId: id,
           type: 1,
         }).save();
-        const createUser = await new AdminModel({
+
+        const createAdmin = await new AdminModel({
           fullname: name,
+          email: payload.email ? payload.email : "",
           loginType: 1,
-          socialLogin: socialAccount._id,
+          socialLogin: socialAcc._id,
         }).save();
-        const token = Helper.generate_Token(createUser._id);
+
+        const token = Helper.generate_Token(createAdmin._id);
         return res.send(
           Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
         );
@@ -700,6 +731,7 @@ export default class AuthController {
         Helper.responseWithoutData(
           true,
           StatusCodes.INTERNAL_SERVER_ERROR,
+          // ReasonPhrases.INTERNAL_SERVER_ERROR
           ex.message
         )
       );

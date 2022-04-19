@@ -17,6 +17,6 @@ import AdminSchema from "./adminSchema";
 //      });
 //  };
 
-const User = mongoose.model<AdminInterface>("Admin", AdminSchema);
+const Admin = mongoose.model<AdminInterface>("Admin", AdminSchema);
 
-export default User;
+export default Admin;

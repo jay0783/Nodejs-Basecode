@@ -1,14 +1,14 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-
+import { Request, Response, NextFunction } from "express";
 import Helper from "../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../utils/responses/index";
 
 class autorizationController {
   // API Authorization
-  async validateApiKey(req: any, res: any, next: any) {
-    let access_token = req.get("token");
-    let nonce = req.get("nonce");
+  async validateApiKey(req: Request, res: Response, next: NextFunction) {
+    let access_token: string = req.get("token");
+    let nonce: string = req.get("nonce");
     let timestamp = req.get("timestamp");
     let hash_str =
       "nonce=" +
@@ -48,7 +48,7 @@ class autorizationController {
     }
   }
 
-  verifyjwtToken = (req: any, res: any, next: any) => {
+  verifyjwtToken = (req: Request, res: Response, next: NextFunction) => {
     let token = req.headers["authorization"];
     // console.log("==========> token :" + token);
     if (!token) {
@@ -63,10 +63,8 @@ class autorizationController {
         );
     }
     try {
-      // token = token.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
-      // console.log("-------->" + JSON.stringify(decoded));
-
+      //@ts-ignore
       req.token_payload = decoded;
     } catch (err) {
       return res

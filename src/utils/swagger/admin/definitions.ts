@@ -158,5 +158,23 @@ export default class SwaggerDefinitions {
         },
       },
     },
+    facebookLoginRequest: {
+      type: "object",
+      required: ["accessToken"],
+      properties: {
+        accessToken: {
+          type: "string",
+        },
+      },
+    },
+    googleLoginRequest: {
+      type: "object",
+      required: ["accessToken"],
+      properties: {
+        accessToken: {
+          type: "string",
+        },
+      },
+    },
   };
 }

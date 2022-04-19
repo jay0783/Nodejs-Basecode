@@ -1,3 +1,4 @@
+import { Document } from "mongoose";
 // export interface Basic {
 //   id: number,
 // }
@@ -20,10 +21,9 @@
 // 	tokenSecret?: string;
 // }
 
-export default interface AdminInterface {
+export default interface AdminInterface extends Document {
   fullname: string;
   email: string;
-  mobile: number;
   password: string;
   socialLogin: string[];
   loginType: number; //0 : Normal , 1 : Social

@@ -560,6 +560,7 @@ export default class AuthController {
         }).save();
         const createUser = await new UserModel({
           fullname: name,
+          email: payload.email ? payload.email : "",
           loginType: 1,
           socialLogin: socialAccount._id,
         }).save();
