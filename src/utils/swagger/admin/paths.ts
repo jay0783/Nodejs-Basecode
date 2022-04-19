@@ -173,6 +173,17 @@ export default class SwaggerPaths {
           },
         ],
 
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AdminResetPasswordRequest",
+              },
+            },
+          },
+        },
+
         responses: {
           200: {
             description: "return candidate registration status",

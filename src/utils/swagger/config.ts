@@ -19,6 +19,7 @@ export default {
       description: "SWAGGER_BASE_URL",
     },
   ],
+  schemes: ["http"],
   components: {
     securitySchemes: {
       apiAuth: {
