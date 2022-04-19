@@ -1,4 +1,4 @@
 export default interface socialLogin {
-  socialId: Number;
-  type: Number;
+  socialId: number;
+  type: number;
 }

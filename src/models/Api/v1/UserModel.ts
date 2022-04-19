@@ -23,6 +23,6 @@ import UserSchema from "./UserSchema";
 //      });
 //  };
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model<UserInterface>("User", UserSchema);
 
 export default User;

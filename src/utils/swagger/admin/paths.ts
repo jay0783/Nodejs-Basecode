@@ -137,7 +137,7 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
-          }
+          },
         ],
 
         requestBody: {
@@ -148,9 +148,9 @@ export default class SwaggerPaths {
                 type: "object",
                 properties: {
                   Authorization: {
-                    type: "string"
-                  }
-                }
+                    type: "string",
+                  },
+                },
               },
             },
           },

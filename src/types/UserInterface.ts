@@ -23,8 +23,9 @@
 export default interface UserInterface {
   fullname: string;
   email: string;
+  mobile: number;
   password: string;
-  // passwordResetToken: string;
-  // passwordResetExpire: Date;
-  // picture: string;
+  socialLogin: string[];
+  loginType: number; //0 : Normal , 1 : Social
+  emailTime: number;
 }

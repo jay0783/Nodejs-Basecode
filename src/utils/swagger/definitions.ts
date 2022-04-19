@@ -40,29 +40,20 @@ export default class SwaggerDefinitions {
         },
       },
     },
-    UserRegistrationResponse: {
+    UserLoginResponse: {
       type: "object",
       allOf: [
         {
           $ref: "#/components/schemas/CommonResponse",
         },
-        // {
-        //   properties: {
-        //     responseData: {
-        //       type: "object",
-        //       $ref: "#/components/schemas/RegistrationResponseFields",
-        //     },
-        //   },
-        // },
-      ],
-    },
-    RegistrationResponseFields: {
-      type: "object",
-      properties: {
-        access_token: {
-          type: "string",
+        {
+          properties: {
+            responseData: {
+              type: "string",
+            },
+          },
         },
-      },
+      ],
     },
     UserLoginRequest: {
       type: "object",
@@ -96,6 +87,24 @@ export default class SwaggerDefinitions {
           type: "string",
         },
         ReEnterPassword: {
+          type: "string",
+        },
+      },
+    },
+    facebookLoginRequest: {
+      type: "object",
+      required: ["accessToken"],
+      properties: {
+        accessToken: {
+          type: "string",
+        },
+      },
+    },
+    googleLoginRequest: {
+      type: "object",
+      required: ["accessToken"],
+      properties: {
+        accessToken: {
           type: "string",
         },
       },

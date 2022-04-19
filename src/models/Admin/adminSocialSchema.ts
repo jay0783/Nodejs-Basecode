@@ -7,3 +7,4 @@ const userSocialSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+export default userSocialSchema;

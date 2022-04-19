@@ -14,8 +14,8 @@ const router = Router();
 // router.use(auth.validateApiKey);
 router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("signup"), AuthController.signup);
-router.get("/google-login", AuthController.googleLogin);
-router.get("/facebook-login", AuthController.facebookLogin);
+router.post("/google-login", AuthController.googleLogin);
+router.post("/facebook-login", AuthController.facebookLogin);
 // router.get("/get-users", AuthController.getAllAccounts);
 
 router.post(
@@ -23,10 +23,7 @@ router.post(
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.post(
-  "/checkResetLink",
-  AuthController.checkResetLink
-);
+router.post("/checkResetLink", AuthController.checkResetLink);
 router.post(
   "/resetPassword",
   validator("resetPassword"),
