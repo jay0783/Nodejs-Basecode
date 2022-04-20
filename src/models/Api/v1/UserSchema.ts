@@ -7,13 +7,13 @@ const UserSchema = new mongoose.Schema(
   {
     fullname: { type: String },
     email: { type: String },
-    mobile: { type: String },
+    mobile: { type: Number },
     password: { type: String },
     socialLogin: [
       { type: mongoose.Schema.Types.ObjectId, ref: userSocialModel },
     ],
     loginType: { type: Number, default: 0 }, //0 : Normal , 1 : Social
-    emailTime: { type: String, default: null },
+    emailTime: { type: Number, default: null },
     // passwordResetToken: { type: String },
     // passwordResetExpires: Date,
 

@@ -13,6 +13,7 @@ export default {
     version: "1.0.0",
     description: "Nodejs Basecode ",
   },
+  schemes: ["http"],
   servers: [
     {
       url: `${Locals.config().url}/admin/`,

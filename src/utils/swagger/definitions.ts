@@ -114,5 +114,9 @@ export default class SwaggerDefinitions {
         },
       },
     },
+<<<<<<< HEAD
   };
+=======
+  }
+>>>>>>> f2cba4f542f0da3f19dd9d20bef9b5abf1854b3b
 }

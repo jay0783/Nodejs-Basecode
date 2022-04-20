@@ -248,5 +248,87 @@ export default class SwaggerPaths {
         },
       },
     },
+    "/facebook-login": {
+      post: {
+        tags: ["social-login"],
+        summary: "used to login using facebook ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/facebookLoginRequest",
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return the login status with auth token ",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserLoginResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/google-login": {
+      post: {
+        tags: ["social-login"],
+        summary: "used to login using facebook ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+        ],
+
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/facebookLoginRequest",
+              },
+            },
+          },
+        },
+
+        responses: {
+          200: {
+            description: "return the login status with auth token ",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserLoginResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 }
