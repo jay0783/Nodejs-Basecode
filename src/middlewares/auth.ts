@@ -22,6 +22,7 @@ class autorizationController {
         .createHmac(process.env.HASHKEY, process.env.APIPRIVATEKEY)
         .update(hash_str)
         .digest("hex");
+
       if (access_token === hmac1) {
         return next();
       } else {
@@ -36,15 +37,14 @@ class autorizationController {
           );
       }
     } catch (err) {
-      return res
-        .status(200)
-        .send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.INTERNAL_SERVER_ERROR,
-            ReasonPhrases.INTERNAL_SERVER_ERROR
-          )
-        );
+      return res.status(200).send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+          // err.message
+        )
+      );
     }
   }
 

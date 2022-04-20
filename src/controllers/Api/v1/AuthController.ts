@@ -1,8 +1,3 @@
-/**
- * Define Auth for the API
- *
- * @author Sameer <sameerp.spaceo@gmail.com>
- */
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
@@ -12,16 +7,15 @@ import fetch from "node-fetch";
 
 import UserModel from "../../../models/Api/v1/UserModel";
 import userSocialModel from "../../../models/Api/v1/userSocialModel";
-
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
+
 const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController {
   public static async signup(req: Request, res: Response): Promise<any> {
     try {
       const validationCheck: any = validationResult(req);
-
       if (!validationCheck.isEmpty()) {
         return res
           .status(200)
@@ -33,9 +27,11 @@ export default class AuthController {
             )
           );
       }
+
       const user = await UserModel.findOne({
         email: req.body.email,
       });
+
       if (user) {
         res.send(
           Helper.responseWithoutData(
@@ -45,7 +41,9 @@ export default class AuthController {
           )
         );
       } else {
-        const createUser = await new UserModel(req.body).save();
+        const createUser = new UserModel(req.body);
+        createUser.password = bcryptjs.hashSync(createUser.password);
+        await createUser.save();
 
         if (createUser) {
           res.send(
@@ -162,10 +160,10 @@ export default class AuthController {
         if (user.email === req.body.email) {
           // console.log(user.email);
           const token = Helper.generate_Token(user._id);
-          req.body.time = new Date().getTime();
+          let time = new Date().getTime();
           let subject = "Reset Your Password";
-          let text = `Dear User, Please verify your account by This link \n
-        either this email link https://localhost:3000/changepassword/${token}\n This link will expires in 5 minutes`;
+          let text = `Dear User,\n You have requested to change the password of your account. \n
+          Please click on the link https://localhost:3000/changepassword/${token}\n to reset your password, Please note that this link will expire is valid for 5 minutes`;
           Helper.sendMail(
             req.body.email,
             subject,
@@ -180,7 +178,7 @@ export default class AuthController {
                   },
                   {
                     $set: {
-                      emailTime: req.body.time,
+                      emailTime: time,
                     },
                   },
                   {
@@ -243,7 +241,7 @@ export default class AuthController {
     res: Response
   ): Promise<any> {
     try {
-      let Authorization = req.body.Authorization;
+      let Authorization = req.params.Authorization;
       if (!Authorization) {
         return res
           .status(200)
@@ -255,28 +253,26 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
-        //@ts-ignore
-        req.token_payload = decoded;
-      }
-      //@ts-ignore
-      const id = req.token_payload._id;
-
-      let user = await UserModel.findById(id);
-      if (user) {
-        let linkTimeDifference = new Date().getTime() - user.emailTime;
-        if (linkTimeDifference < 3 * 60 * 1000) {
-          res.send(
-            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-          );
-        } else {
-          res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.UNAUTHORIZED,
-              ReasonPhrases.UNAUTHORIZED
-            )
-          );
+        const decoded: any = jwt.verify(
+          Authorization,
+          process.env.JWT_SECRETKEY
+        );
+        let user = await UserModel.findById(decoded._id);
+        if (user) {
+          let linkTimeDifference = new Date().getTime() - user.emailTime;
+          if (linkTimeDifference < 3 * 60 * 1000) {
+            res.send(
+              Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+            );
+          } else {
+            res.send(
+              Helper.responseWithoutData(
+                false,
+                StatusCodes.UNAUTHORIZED,
+                ReasonPhrases.UNAUTHORIZED
+              )
+            );
+          }
         }
       }
     } catch (error) {
@@ -318,40 +314,41 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY); //@ts-ignore
-        req.token_payload = decoded;
-      }
-      //@ts-ignore
-      const id = req.token_payload._id;
+        const decoded: any = jwt.verify(
+          Authorization,
+          process.env.JWT_SECRETKEY
+        ); //@ts-ignore
 
-      let user = await UserModel.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            password: req.body.newPassword,
+        let hashPass = bcryptjs.hashSync(req.body.newPassword);
+        let user = await UserModel.findByIdAndUpdate(
+          decoded._id,
+          {
+            $set: {
+              password: hashPass,
+            },
           },
-        },
-        {
-          new: true,
+          {
+            new: true,
+          }
+        );
+        user.save();
+        if (user) {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.OK,
+              "Password Updated Successfully"
+            )
+          );
+        } else {
+          return res.send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
         }
-      );
-      user.save();
-      if (user) {
-        res.send(
-          Helper.responseWithoutData(
-            true,
-            StatusCodes.OK,
-            "Password Updated Successfully"
-          )
-        );
-      } else {
-        return res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
       }
     } catch (error) {
       res.send(
@@ -461,10 +458,6 @@ export default class AuthController {
         );
       }
     } catch (ex) {
-      console.log(
-        "=============================>>>>>>>>>>>>" +
-          JSON.stringify({ message: ex.message })
-      );
       return res.send(
         Helper.responseWithoutData(
           true,
@@ -575,6 +568,74 @@ export default class AuthController {
           true,
           StatusCodes.INTERNAL_SERVER_ERROR,
           ex.message
+        )
+      );
+    }
+  }
+
+  public static async editPassword(req: Request, res: Response): Promise<any> {
+    try {
+      const validationCheck: any = validationResult(req);
+
+      if (!validationCheck.isEmpty()) {
+        return res
+          .status(200)
+          .send(
+            Helper.responseWithoutData(
+              false,
+              StatusCodes.BAD_REQUEST,
+              validationCheck.errors[0].msg
+            )
+          );
+      }
+
+      //@ts-ignore
+      const id = req.token_payload._id;
+
+      const user: any = await UserModel.findById(id);
+
+      if (user) {
+        if (bcryptjs.compareSync(req.body.oldPassword, user.password)) {
+          const hashPass = bcryptjs.hashSync(req.body.newPassword);
+          await UserModel.findByIdAndUpdate(
+            id,
+            {
+              $set: {
+                password: hashPass,
+              },
+            },
+            {
+              new: true,
+            }
+          );
+
+          res.send(
+            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
+          );
+        } else {
+          res.send(
+            Helper.responseWithoutData(
+              true,
+              StatusCodes.BAD_REQUEST,
+              ReasonPhrases.BAD_REQUEST
+            )
+          );
+        }
+      } else {
+        res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.BAD_REQUEST,
+            ReasonPhrases.BAD_REQUEST
+          )
+        );
+      }
+    } catch (error) {
+      res.send(
+        Helper.responseWithoutData(
+          false,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
         )
       );
     }

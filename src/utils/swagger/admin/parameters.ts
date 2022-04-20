@@ -41,5 +41,13 @@ export default class SwaggerParameters {
         type: "string",
       },
     },
+    checkResetToken: {
+      name: "Authorization",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
   };
 }

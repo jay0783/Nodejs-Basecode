@@ -1,9 +1,3 @@
-/**
- * Define all your API routes
- *
- * @author Sameer <sameerp.spaceo@gmail.com>
- */
-
 import { Router } from "express";
 
 import AuthController from "../../../controllers/Api/v1/AuthController";
@@ -16,7 +10,6 @@ router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("signup"), AuthController.signup);
 router.post("/google-login", AuthController.googleLogin);
 router.post("/facebook-login", AuthController.facebookLogin);
-// router.get("/get-users", AuthController.getAllAccounts);
 
 router.post(
   "/forgetPassword",

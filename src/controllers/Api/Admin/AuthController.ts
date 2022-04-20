@@ -44,7 +44,9 @@ export default class AuthController {
           )
         );
       } else {
-        const newAdmin = await new AdminModel(req.body).save();
+        const newAdmin = new AdminModel(req.body);
+        newAdmin.password = bcryptjs.hashSync(newAdmin.password);
+        await newAdmin.save();
 
         if (newAdmin) {
           res.send(
@@ -125,12 +127,13 @@ export default class AuthController {
           )
         );
       }
-    } catch {
+    } catch (ex) {
       res.send(
         Helper.responseWithoutData(
           false,
           StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
+          // ReasonPhrases.INTERNAL_SERVER_ERROR
+          ex.message
         )
       );
     }
@@ -162,8 +165,8 @@ export default class AuthController {
           const token = Helper.generate_Token(admin._id);
           let time = new Date().getTime();
           let subject = "Reset Your Password";
-          let text = `Dear User, Please verify your account by This link \n
-        either this email link https://localhost:3000/changepassword/${token}\n This link will expires in 5 minutes`;
+          let text = `Dear User,\n You have requested to change the password of your account. \n
+        Please click on the link https://localhost:3000/changepassword/${token}\n to reset your password, Please note that this link will expire is valid for 5 minutes`;
           Helper.sendMail(
             req.body.email,
             subject,
@@ -231,6 +234,7 @@ export default class AuthController {
           false,
           StatusCodes.INTERNAL_SERVER_ERROR,
           ReasonPhrases.INTERNAL_SERVER_ERROR
+          // error.message
         )
       );
     }
@@ -241,7 +245,7 @@ export default class AuthController {
     res: Response
   ): Promise<any> {
     try {
-      let Authorization = req.body.Authorization;
+      let Authorization = req.params.Authorization;
       if (!Authorization) {
         return res
           .status(200)
@@ -253,14 +257,9 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
-        //@ts-ignore
-        req.token_payload = decoded;
+        var decoded: any = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
       }
-      //@ts-ignore
-      const id = req.token_payload._id;
-
-      let admin = await AdminModel.findById(id);
+      let admin = await AdminModel.findById(decoded._id);
       if (admin) {
         let linkTimeDifference = new Date().getTime() - admin.emailTime;
         if (linkTimeDifference < 3 * 60 * 1000) {
@@ -276,12 +275,21 @@ export default class AuthController {
             )
           );
         }
+      } else {
+        res.send(
+          Helper.responseWithoutData(
+            false,
+            StatusCodes.UNAUTHORIZED,
+            ReasonPhrases.UNAUTHORIZED
+          )
+        );
       }
     } catch (error) {
       res.send(
         Helper.responseWithoutData(
           false,
           StatusCodes.INTERNAL_SERVER_ERROR,
+          // error.message
           ReasonPhrases.INTERNAL_SERVER_ERROR
         )
       );
@@ -316,26 +324,23 @@ export default class AuthController {
             )
           );
       } else {
-        const decoded = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
+        var decoded: any = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
         //@ts-ignore
-        req.token_payload = decoded;
       }
-      //@ts-ignore
-      const id = req.token_payload._id;
-
-      let admin = await AdminModel.findByIdAndUpdate(
-        id,
+      const hashPass = bcryptjs.hashSync(req.body.newPassword);
+      let updateAdmin = await AdminModel.findByIdAndUpdate(
+        decoded._id,
         {
           $set: {
-            password: req.body.newPassword,
+            password: hashPass,
           },
         },
         {
           new: true,
         }
       );
-      admin.save();
-      if (admin) {
+      await updateAdmin.save();
+      if (updateAdmin) {
         res.send(
           Helper.responseWithoutData(
             true,

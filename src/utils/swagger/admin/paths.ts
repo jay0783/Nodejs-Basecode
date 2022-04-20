@@ -124,7 +124,7 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/check-reset-link": {
+    "/check-reset-link/{Authorization}": {
       post: {
         tags: ["Admin"],
         summary: "Used for check reset password token is valid or not ",
@@ -138,23 +138,26 @@ export default class SwaggerPaths {
           {
             $ref: "#/components/parameters/timestamp",
           },
+          {
+            $ref: "#/components/parameters/checkResetToken",
+          },
         ],
 
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  Authorization: {
-                    type: "string",
-                  },
-                },
-              },
-            },
-          },
-        },
+        // requestBody: {
+        //   required: true,
+        //   content: {
+        //     "application/json": {
+        //       schema: {
+        //         type: "object",
+        //         properties: {
+        //           Authorization: {
+        //             type: "string",
+        //           },
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
 
         responses: {
           200: {

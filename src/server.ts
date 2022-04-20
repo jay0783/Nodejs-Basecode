@@ -8,6 +8,8 @@ import database from "./config/Database";
 import apiRouter from "./routes/index";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 import openApiDocumentation from "./utils/swagger/config";
 import adminApiDocumentation from "./utils/swagger/admin/config";
@@ -24,10 +26,7 @@ class App {
     this.connectDb();
     this.mountDotEnv();
     this.listen();
-    // configure the middleware
     this.mountMiddlewares();
-
-    // configure the routes
     this.mountRoutes();
   }
 

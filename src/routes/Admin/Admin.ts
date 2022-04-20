@@ -11,7 +11,7 @@ import validator from "../../middlewares/validator";
 import auth from "../../middlewares/auth";
 
 const router = Router();
-// router.use(auth.validateApiKey);
+router.use(auth.validateApiKey);
 router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("adminSignup"), AuthController.signup);
 router.post("/google-login", AuthController.googleLogin);
@@ -28,7 +28,7 @@ router.post(
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.post("/check-reset-link", AuthController.checkResetLink);
+router.post("/check-reset-link/:Authorization", AuthController.checkResetLink);
 router.post(
   "/reset-password",
   validator("resetPassword"),
