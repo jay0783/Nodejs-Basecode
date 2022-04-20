@@ -49,7 +49,7 @@ export default class SwaggerDefinitions {
         {
           properties: {
             responseData: {
-              type: "string"
+              type: "string",
             },
           },
         },
@@ -114,6 +114,5 @@ export default class SwaggerDefinitions {
         },
       },
     },
-    
   };
 }

@@ -94,7 +94,11 @@ export default class AuthController {
       });
       if (user) {
         if (
+
+          //@ts-ignore
           user.email == req.body.email &&
+          //@ts-ignore
+
           bcryptjs.compareSync(req.body.password, user.password)
         ) {
           const token = Helper.generate_Token(user._id);
@@ -400,6 +404,8 @@ export default class AuthController {
       const user = await UserModel.findById(id);
 
       if (user) {
+          //@ts-ignore
+
         if (bcryptjs.compareSync(req.body.oldPassword, user.password)) {
           await UserModel.findByIdAndUpdate(
             id,
@@ -439,6 +445,224 @@ export default class AuthController {
           false,
           StatusCodes.INTERNAL_SERVER_ERROR,
           ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+  }
+  public static async googleLogin(req: Request, res: Response): Promise<any> {
+    try {
+      // const token = req.headers["access-token"];
+      const token = req.body.accessToken;
+      console.log("token =====>>>" + token);
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+      });
+      const payload = ticket.getPayload();
+      console.log("payload===>>>." + payload);
+      const { name, email, sub } = payload;
+
+      //checking if user already exists
+      const isExistingUser = await UserModel.findOne({
+        email: email,
+      }).populate("socialLogin");
+      // console.log("user found ==>" + JSON.stringify(isExistingUser));
+      //@ts-ignore
+      if (isExistingUser) {
+        //if user already exists
+        if (
+          //@ts-ignore
+          isExistingUser.loginType == 0 && //@ts-ignore
+          isExistingUser.socialLogin.length <= 0 //if user exists and user has normally signed up
+        ) {
+          const socialAccount = await new userSocialModel({
+            socialId: sub,
+            type: 2,
+          }).save();
+          const updateUser = await UserModel.findOneAndUpdate(
+            { email: email },
+            { loginType: 1, $push: { socialLogin: socialAccount._id } },
+            { new: true }
+          );
+
+          const token = Helper.generate_Token(updateUser._id);
+          return res.send(
+            Helper.responseWithData(
+              true,
+              StatusCodes.OK,
+              ReasonPhrases.OK,
+              token
+            )
+          );
+        } else {
+          //when user email is found but the user has social logins in account
+          //@ts-ignore
+          let gId = isExistingUser.socialLogin.find(
+            (socialAcc: any) => socialAcc.socialId === sub
+          );
+          if (gId !== undefined) {
+            const token = Helper.generate_Token(isExistingUser._id);
+            return res.send(
+              Helper.responseWithData(
+                true,
+                StatusCodes.OK,
+                ReasonPhrases.OK,
+                token
+              )
+            );
+          } else {
+            const socialAccount = await new userSocialModel({
+              socialId: sub,
+              type: 2,
+            }).save();
+
+            const updateUser = await UserModel.findOneAndUpdate(
+              { email: email },
+              { loginType: 1, $push: { socialLogin: socialAccount._id } },
+              { new: true }
+            );
+            const token = Helper.generate_Token(updateUser._id);
+            return res.send(
+              Helper.responseWithData(
+                true,
+                StatusCodes.OK,
+                ReasonPhrases.OK,
+                token
+              )
+            );
+          }
+        }
+      } else {
+        //no user found with email create new
+        const socialAccount = await new userSocialModel({
+          socialId: sub,
+          type: 2,
+        }).save();
+        const createUser = await new UserModel({
+          fullname: name,
+          email: email,
+          loginType: 1,
+          socialLogin: socialAccount._id,
+        }).save();
+        const token = Helper.generate_Token(createUser._id);
+        return res.send(
+          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
+        );
+      }
+    } catch (ex) {
+      console.log(
+        "=============================>>>>>>>>>>>>" +
+          JSON.stringify({ message: ex.message })
+      );
+      return res.send(
+        Helper.responseWithoutData(
+          true,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+  }
+
+  public static async facebookLogin(req: Request, res: Response): Promise<any> {
+    try {
+      // const token = req.headers["access-token"];
+      const token = req.body.accessToken;
+      const data = await fetch(
+        `https://graph.facebook.com/v13.0/me?fields=id,name,email&access_token=${token}`
+      );
+      const payload = await data.json();
+      const { id, name, email } = payload;
+
+      const socialAccount = await userSocialModel.findOne({
+        socialId: id,
+      });
+      if (socialAccount) {
+        //checking if the facebook id already exists in database
+        if (payload.email) {
+          //if facebook profile is public and email is available
+          const userWithSocial = await UserModel.findOne({
+            email: payload.email,
+          }).populate("socialLogin");
+          //@ts-ignore
+          let fId = userWithSocial.socialLogin.find(
+            (socialAcc: any) => socialAcc.socialId === id
+          );
+          if (fId !== undefined) {
+            const token = Helper.generate_Token(userWithSocial._id);
+            return res.send(
+              Helper.responseWithData(
+                true,
+                StatusCodes.OK,
+                ReasonPhrases.OK,
+                token
+              )
+            );
+          } else {
+            //facebook id exists but email is not available
+            // const socialAccount = await new userSocialModel({
+            //   socialId: id,
+            //   type: 1,
+            // }).save();
+
+            const updateUser = await UserModel.findOneAndUpdate(
+              { email: email },
+              { loginType: 1, $push: { socialLogin: socialAccount._id } },
+              { new: true }
+            );
+            const token = Helper.generate_Token(updateUser._id);
+            return res.send(
+              Helper.responseWithData(
+                true,
+                StatusCodes.OK,
+                ReasonPhrases.OK,
+                token
+              )
+            );
+          }
+        } else {
+          //if facebook id is found in the database new entries should be created
+          // const socialAccount = await new userSocialModel({
+          //   socialId: id,
+          //   type: 1,
+          // }).save();
+
+          const createUser = await new UserModel({
+            fullname: name,
+            loginType: 1,
+            socialLogin: socialAccount._id,
+          }).save();
+
+          const token = Helper.generate_Token(createUser._id);
+          return res.send(
+            Helper.responseWithData(
+              true,
+              StatusCodes.OK,
+              ReasonPhrases.OK,
+              token
+            )
+          );
+        }
+      } else {
+        const socialAccount = await new userSocialModel({
+          socialId: id,
+          type: 1,
+        }).save();
+        const createUser = await new UserModel({
+          fullname: name,
+          loginType: 1,
+          socialLogin: socialAccount._id,
+        }).save();
+        const token = Helper.generate_Token(createUser._id);
+        return res.send(
+          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
+        );
+      }
+    } catch (ex) {
+      return res.send(
+        Helper.responseWithoutData(
+          true,
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ex.message
         )
       );
     }
