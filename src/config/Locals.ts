@@ -12,7 +12,7 @@ export default class Locals {
    * throughout the app's runtime
    */
   public static config(): any {
-    const url = `${process.env.APP_URL}`;
+    const url = `${process.env.APP_URL}:${process.env.SERVER_PORT}`;
     const port = process.env.SERVER_PORT || 8080;
     const appSecret = process.env.APP_SECRET || "This is your responsibility!";
     const mongooseUrl = process.env.MONGOOSE_URL;

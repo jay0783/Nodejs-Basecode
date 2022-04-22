@@ -27,20 +27,12 @@ class autorizationController {
         return next();
       } else {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (err) {
-      return res.status(200).send(
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
         Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
           ReasonPhrases.INTERNAL_SERVER_ERROR
           // err.message
         )
@@ -53,14 +45,8 @@ class autorizationController {
     // console.log("==========> token :" + token);
     if (!token) {
       return res
-        .status(200)
-        .send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        .status(StatusCodes.BAD_REQUEST)
+        .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
     }
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
@@ -68,14 +54,8 @@ class autorizationController {
       req.token_payload = decoded;
     } catch (err) {
       return res
-        .status(200)
-        .send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.UNAUTHORIZED,
-            ReasonPhrases.UNAUTHORIZED
-          )
-        );
+        .status(StatusCodes.UNAUTHORIZED)
+        .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
     }
     return next();
   };

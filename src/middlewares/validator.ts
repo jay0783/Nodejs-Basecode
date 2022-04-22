@@ -8,7 +8,7 @@ export default function validate(methodName: String) {
           .withMessage("fullname is required")
           .isLength({ min: 2, max: 30 })
           .withMessage("fullname must be min 3 and max 30 characters long")
-          .isAlpha()
+          .isAlpha("en-US", { ignore: " " })
           .withMessage("fullname must be in Alphabetic"),
 
         // body("last_name")
@@ -16,7 +16,7 @@ export default function validate(methodName: String) {
         //   .withMessage("Last name is required")
         //   .isLength({ min: 2, max: 30 })
         //   .withMessage("Last Name must be min 3 and max 30 characters long")
-        //   .isAlpha()
+        //   .isAlpha('en-US', {ignore: ' '})
         //   .withMessage("last Name must be in Alphabetic"),
 
         body("email")
@@ -50,7 +50,7 @@ export default function validate(methodName: String) {
           .withMessage("fullname is required")
           .isLength({ min: 2, max: 30 })
           .withMessage("fullname must be min 3 and max 30 characters long")
-          .isAlpha()
+          .isAlpha("en-US", { ignore: " " })
           .withMessage("fullname must be in Alphabetic"),
 
         // body("last_name")
@@ -58,7 +58,7 @@ export default function validate(methodName: String) {
         //   .withMessage("Last name is required")
         //   .isLength({ min: 2, max: 30 })
         //   .withMessage("Last Name must be min 3 and max 30 characters long")
-        //   .isAlpha()
+        //   .isAlpha('en-US', {ignore: ' '})
         //   .withMessage("last Name must be in Alphabetic"),
 
         body("email")
@@ -111,11 +111,6 @@ export default function validate(methodName: String) {
           .withMessage("newPassword is required")
           .isLength({ min: 8, max: 15 })
           .withMessage("newPassword must be 8 characters long"),
-        body("ReEnterPassword")
-          .notEmpty()
-          .withMessage("ReEnterPassword is required")
-          .isLength({ min: 8, max: 15 })
-          .withMessage("ReEnterPassword must be 8 characters long"),
       ];
     }
     case "editProfile": {
@@ -125,7 +120,7 @@ export default function validate(methodName: String) {
           .withMessage("fullname is required")
           .isLength({ min: 2, max: 30 })
           .withMessage("fullname must be min 3 and max 30 characters long")
-          .isAlpha()
+          .isAlpha("en-US", { ignore: " " })
           .withMessage("fullname must be in Alphabetic"),
 
         body("email")

@@ -8,6 +8,7 @@ const AdminSchema = new mongoose.Schema(
     email: { type: String },
     password: { type: String },
     socialLogin: [{ type: mongoose.Schema.Types.ObjectId, ref: adminSocial }],
+    loginType: { type: Number, default: 0 }, //0 : Normal , 1 : Social
     emailTime: { type: String },
   },
   {

@@ -4,13 +4,7 @@ export default class SwaggerDefinitions {
     CommonResponse: {
       type: "object",
       properties: {
-        responseStatus: {
-          type: "boolean",
-        },
-        responseCode: {
-          type: "integer",
-        },
-        responseMessage: {
+        message: {
           type: "string",
         },
       },
@@ -48,6 +42,15 @@ export default class SwaggerDefinitions {
         },
       },
     },
+    EditUserRequest: {
+      type: "object",
+      required: ["_id"],
+      properties: {
+        _id: {
+          type: "string",
+        },
+      },
+    },
     AdminLoginResponse: {
       type: "object",
       allOf: [
@@ -56,7 +59,7 @@ export default class SwaggerDefinitions {
         },
         {
           properties: {
-            responseData: {
+            data: {
               type: "string",
             },
           },
@@ -99,6 +102,21 @@ export default class SwaggerDefinitions {
         },
       },
     },
+    UserDetailsResponse: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
+        },
+        {
+          properties: {
+            data: {
+              $ref: "#/components/schemas/UserResponseFields",
+            },
+          },
+        },
+      ],
+    },
     UserResponseList: {
       type: "object",
       allOf: [
@@ -107,7 +125,7 @@ export default class SwaggerDefinitions {
         },
         {
           properties: {
-            responseData: {
+            data: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/UserResponseFields",

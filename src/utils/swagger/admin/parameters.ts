@@ -49,5 +49,13 @@ export default class SwaggerParameters {
         type: "string",
       },
     },
+    getUser: {
+      name: "_id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
   };
 }

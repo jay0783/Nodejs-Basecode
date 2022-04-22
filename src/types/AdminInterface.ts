@@ -1,31 +1,16 @@
-import { Document } from "mongoose";
-// export interface Basic {
-//   id: number,
-// }
-
-// export interface Customer extends Basic{
-//   name: string,
-//   email?: string,
-//   password?: string
-// }
-
 /**
  * Define interface for User Model
  *
  * @author Sameer <sameerp.spaceo@gmail.com>
  */
 
-//  export interface Tokens {
-// 	kind: string;
-// 	accessToken: string;
-// 	tokenSecret?: string;
-// }
+import { Document } from "mongoose";
 
 export default interface AdminInterface extends Document {
   fullname: string;
   email: string;
   password: string;
-  socialLogin: string[];
+  socialLogin?: string[];
   loginType: number; //0 : Normal , 1 : Social
   emailTime: number;
 }

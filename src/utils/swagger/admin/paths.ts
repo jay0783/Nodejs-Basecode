@@ -39,6 +39,46 @@ export default class SwaggerPaths {
               },
             },
           },
+          201: {
+            description: "return candidate registration successfull status",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          409: {
+            description: "Error status for conflict with Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -76,6 +116,26 @@ export default class SwaggerPaths {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/AdminLoginResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
                 },
               },
             },
@@ -121,11 +181,31 @@ export default class SwaggerPaths {
               },
             },
           },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
     "/check-reset-link/{Authorization}": {
-      post: {
+      get: {
         tags: ["Admin"],
         summary: "Used for check reset password token is valid or not ",
         parameters: [
@@ -162,6 +242,36 @@ export default class SwaggerPaths {
         responses: {
           200: {
             description: "return reset password token is valid or not",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error status for server error",
             content: {
               "application/json": {
                 schema: {
@@ -211,6 +321,26 @@ export default class SwaggerPaths {
               },
             },
           },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -240,6 +370,79 @@ export default class SwaggerPaths {
               },
             },
           },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/get-user/{_id}": {
+      get: {
+        tags: ["User-options"],
+        summary: "Used to get user data for edit-user-profile ",
+        parameters: [
+          {
+            $ref: "#/components/parameters/token",
+          },
+          {
+            $ref: "#/components/parameters/nonce",
+          },
+          {
+            $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/getUser",
+          },
+        ],
+
+        responses: {
+          200: {
+            description: "return user data ",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserDetailsResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -260,7 +463,6 @@ export default class SwaggerPaths {
         ],
 
         requestBody: {
-          required: true,
           content: {
             "application/json": {
               schema: {
@@ -273,6 +475,26 @@ export default class SwaggerPaths {
         responses: {
           200: {
             description: "return user profile successfully updated",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
             content: {
               "application/json": {
                 schema: {
@@ -331,6 +553,26 @@ export default class SwaggerPaths {
               },
             },
           },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -372,6 +614,26 @@ export default class SwaggerPaths {
               },
             },
           },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -409,6 +671,26 @@ export default class SwaggerPaths {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/AdminLoginResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error status for server error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
                 },
               },
             },

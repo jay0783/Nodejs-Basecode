@@ -28,7 +28,7 @@ router.post(
   validator("forgetPassword"),
   AuthController.forgetPassword
 );
-router.post("/check-reset-link/:Authorization", AuthController.checkResetLink);
+router.get("/check-reset-link/:Authorization", AuthController.checkResetLink);
 router.post(
   "/reset-password",
   validator("resetPassword"),

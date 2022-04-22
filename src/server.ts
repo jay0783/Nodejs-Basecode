@@ -1,16 +1,14 @@
 import express from "express";
-import Locals from "./config/Locals";
 import compression from "compression";
-import logger from "./utils/logger";
+import cors from "cors";
 import multer from "multer";
 import helmet from "helmet";
+import swaggerUi from "swagger-ui-express";
+import Locals from "./config/Locals";
+import logger from "./utils/logger";
 import database from "./config/Database";
 import apiRouter from "./routes/index";
-import swaggerUi from "swagger-ui-express";
-import cors from "cors";
-import dotenv from "dotenv";
-dotenv.config();
-
+import "dotenv/config";
 import openApiDocumentation from "./utils/swagger/config";
 import adminApiDocumentation from "./utils/swagger/admin/config";
 

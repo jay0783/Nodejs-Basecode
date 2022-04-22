@@ -14,6 +14,7 @@ import AdminSocialModel from "../../../models/Admin/adminSocialModel";
 import UserModel from "../../../models/Api/v1/UserModel";
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
+
 const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
 export default class AuthController {
@@ -23,57 +24,35 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
       const admin = await AdminModel.findOne({
         email: req.body.email,
       });
       if (admin) {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.CONFLICT,
-            ReasonPhrases.CONFLICT
-          )
-        );
+        res
+          .status(StatusCodes.CONFLICT)
+          .send(Helper.responseWithoutData(ReasonPhrases.CONFLICT));
       } else {
         const newAdmin = new AdminModel(req.body);
         newAdmin.password = bcryptjs.hashSync(newAdmin.password);
         await newAdmin.save();
 
         if (newAdmin) {
-          res.send(
-            Helper.responseWithoutData(
-              true,
-              StatusCodes.CREATED,
-              ReasonPhrases.CREATED
-            )
-          );
+          res
+            .status(StatusCodes.CREATED)
+            .send(Helper.responseWithoutData(ReasonPhrases.CREATED));
         } else {
-          res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
-            )
-          );
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
         }
       }
     } catch (err) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -83,14 +62,8 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
       const user = await AdminModel.findOne({
         email: req.body.email,
@@ -101,41 +74,23 @@ export default class AuthController {
           bcryptjs.compareSync(req.body.password, user.password)
         ) {
           const token = Helper.generate_Token(user._id);
-          res.send(
-            Helper.responseWithData(
-              true,
-              StatusCodes.OK,
-              ReasonPhrases.OK,
-              token
-            )
-          );
+          res
+            .status(StatusCodes.OK)
+            .send(Helper.responseWithData(ReasonPhrases.OK, token));
         } else {
-          res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              "Invalid Credentials"
-            )
-          );
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
         }
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            "Invalid Credentials"
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (ex) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          // ReasonPhrases.INTERNAL_SERVER_ERROR
-          ex.message
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -148,14 +103,8 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
       const admin: any = await AdminModel.findOne({
         email: req.body.email,
@@ -166,77 +115,52 @@ export default class AuthController {
           let time = new Date().getTime();
           let subject = "Reset Your Password";
           let text = `Dear User,\n You have requested to change the password of your account. \n
-        Please click on the link https://localhost:3000/changepassword/${token}\n to reset your password, Please note that this link will expire is valid for 5 minutes`;
-          Helper.sendMail(
-            req.body.email,
-            subject,
-            text,
-            (error: any, result: any) => {
-              if (error) {
-                return error;
-              } else {
-                AdminModel.findOneAndUpdate(
-                  {
-                    email: req.body.email,
-                  },
-                  {
-                    $set: {
-                      emailTime: time,
-                    },
-                  },
-                  {
-                    new: true,
-                  },
-                  (err: any, resu: any) => {
-                    if (err) {
-                      return res.send(
-                        Helper.responseWithoutData(
-                          false,
-                          StatusCodes.BAD_REQUEST,
-                          ReasonPhrases.BAD_REQUEST
-                        )
-                      );
-                    } else {
-                      return res.send(
-                        Helper.responseWithoutData(
-                          true,
-                          StatusCodes.OK,
-                          "Email Sent Successfully"
-                        )
-                      );
-                    }
-                  }
-                );
-              }
+  Please click on the link https://localhost:3000/changepassword/${token}\n to reset your password, Please note that this link is valid for 5 minutes`;
+
+          const hasMail = Helper.sendMail(req.body.email, subject, text);
+          // if (hasMail) {
+          const updateAdmin = await AdminModel.findOneAndUpdate(
+            {
+              email: req.body.email,
+            },
+            {
+              $set: {
+                emailTime: time,
+              },
+            },
+            {
+              new: true,
             }
           );
-        } else {
-          res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
-            )
-          );
+
+          if (updateAdmin) {
+            return res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithoutData("Email Sent Successfully"));
+          } else {
+            return res
+              .status(StatusCodes.BAD_REQUEST)
+              .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
+          }
         }
+        // } else {
+        //   res.send(
+        //     Helper.responseWithoutData(
+        //       false,
+        //       StatusCodes.BAD_REQUEST,
+        //       ReasonPhrases.BAD_REQUEST
+        //     )
+        //   );
+        // }
       } else {
-        return res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-          // error.message
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -248,14 +172,8 @@ export default class AuthController {
       let Authorization = req.params.Authorization;
       if (!Authorization) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       } else {
         var decoded: any = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
       }
@@ -263,36 +181,23 @@ export default class AuthController {
       if (admin) {
         let linkTimeDifference = new Date().getTime() - admin.emailTime;
         if (linkTimeDifference < 3 * 60 * 1000) {
-          res.send(
-            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-          );
+          res
+            .status(StatusCodes.OK)
+            .send(Helper.responseWithoutData(ReasonPhrases.OK));
         } else {
-          res.send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.UNAUTHORIZED,
-              ReasonPhrases.UNAUTHORIZED
-            )
-          );
+          res
+            .status(StatusCodes.UNAUTHORIZED)
+            .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
         }
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.UNAUTHORIZED,
-            ReasonPhrases.UNAUTHORIZED
-          )
-        );
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          // error.message
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -302,27 +207,15 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
 
       let Authorization = req.body.Authorization;
       if (!Authorization) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              ReasonPhrases.BAD_REQUEST
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       } else {
         var decoded: any = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
         //@ts-ignore
@@ -341,30 +234,18 @@ export default class AuthController {
       );
       await updateAdmin.save();
       if (updateAdmin) {
-        res.send(
-          Helper.responseWithoutData(
-            true,
-            StatusCodes.OK,
-            "Password Updated Successfully"
-          )
-        );
+        res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithoutData(ReasonPhrases.OK));
       } else {
-        return res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -372,26 +253,18 @@ export default class AuthController {
     try {
       let admin = await UserModel.find({});
       if (admin) {
-        res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, admin)
-        );
+        res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithData(ReasonPhrases.OK, admin));
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -400,24 +273,33 @@ export default class AuthController {
       const userCount = await UserModel.count();
       return res
         .status(200)
-        .send(
-          Helper.responseWithData(
-            true,
-            StatusCodes.OK,
-            ReasonPhrases.OK,
-            userCount
-          )
-        );
+        .send(Helper.responseWithData(ReasonPhrases.OK, userCount));
     } catch (ex) {
       return res
-        .status(200)
-        .send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.INTERNAL_SERVER_ERROR,
-            ex.message
-          )
-        );
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
+    }
+  }
+
+  public static async getUserDetails(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    try {
+      let user = await UserModel.findById(req.body._id);
+      if (user) {
+        res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithData(ReasonPhrases.OK, user));
+      } else {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
+      }
+    } catch (error) {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -427,14 +309,8 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
 
       let admin = await UserModel.findByIdAndUpdate(
@@ -443,26 +319,18 @@ export default class AuthController {
         { new: true }
       );
       if (admin) {
-        res.send(
-          Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-        );
+        res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithoutData(ReasonPhrases.OK));
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -472,14 +340,8 @@ export default class AuthController {
 
       if (!validationCheck.isEmpty()) {
         return res
-          .status(200)
-          .send(
-            Helper.responseWithoutData(
-              false,
-              StatusCodes.BAD_REQUEST,
-              validationCheck.errors[0].msg
-            )
-          );
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(validationCheck.errors[0].msg));
       }
 
       //@ts-ignore
@@ -500,35 +362,23 @@ export default class AuthController {
               new: true,
             }
           );
-          res.send(
-            Helper.responseWithoutData(true, StatusCodes.OK, ReasonPhrases.OK)
-          );
+          res
+            .status(StatusCodes.OK)
+            .send(Helper.responseWithoutData(ReasonPhrases.OK));
         } else {
-          res.send(
-            Helper.responseWithoutData(
-              true,
-              StatusCodes.BAD_REQUEST,
-              "Invalid Current Password"
-            )
-          );
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
         }
       } else {
-        res.send(
-          Helper.responseWithoutData(
-            false,
-            StatusCodes.BAD_REQUEST,
-            ReasonPhrases.BAD_REQUEST
-          )
-        );
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       }
     } catch (error) {
-      res.send(
-        Helper.responseWithoutData(
-          false,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -563,14 +413,9 @@ export default class AuthController {
           );
 
           const token = Helper.generate_Token(updateUser._id);
-          return res.send(
-            Helper.responseWithData(
-              true,
-              StatusCodes.OK,
-              ReasonPhrases.OK,
-              token
-            )
-          );
+          return res
+            .status(StatusCodes.OK)
+            .send(Helper.responseWithData(ReasonPhrases.OK, token));
         } else {
           //when user email is found but the user has social logins in account
           let gId = isExistingUser.socialLogin.find(
@@ -578,14 +423,9 @@ export default class AuthController {
           );
           if (gId !== undefined) {
             const token = Helper.generate_Token(isExistingUser._id);
-            return res.send(
-              Helper.responseWithData(
-                true,
-                StatusCodes.OK,
-                ReasonPhrases.OK,
-                token
-              )
-            );
+            return res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithData(ReasonPhrases.OK, token));
           } else {
             const socialAccount = await new AdminSocialModel({
               socialId: sub,
@@ -598,14 +438,9 @@ export default class AuthController {
               { new: true }
             );
             const token = Helper.generate_Token(updateUser._id);
-            return res.send(
-              Helper.responseWithData(
-                true,
-                StatusCodes.OK,
-                ReasonPhrases.OK,
-                token
-              )
-            );
+            return res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithData(ReasonPhrases.OK, token));
           }
         }
       } else {
@@ -621,18 +456,14 @@ export default class AuthController {
           socialLogin: socialAccount._id,
         }).save();
         const token = Helper.generate_Token(createUser._id);
-        return res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
-        );
+        return res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithData(ReasonPhrases.OK, token));
       }
     } catch (ex) {
-      return res.send(
-        Helper.responseWithoutData(
-          true,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          ReasonPhrases.INTERNAL_SERVER_ERROR
-        )
-      );
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -661,14 +492,9 @@ export default class AuthController {
           );
           if (fId !== undefined) {
             const token = Helper.generate_Token(adminWithSocial._id);
-            return res.send(
-              Helper.responseWithData(
-                true,
-                StatusCodes.OK,
-                ReasonPhrases.OK,
-                token
-              )
-            );
+            return res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithData(ReasonPhrases.OK, token));
           } else {
             //facebook id exists but email is not available
             // const socialAccount = await new userSocialModel({
@@ -682,14 +508,9 @@ export default class AuthController {
               { new: true }
             );
             const token = Helper.generate_Token(updateUser._id);
-            return res.send(
-              Helper.responseWithData(
-                true,
-                StatusCodes.OK,
-                ReasonPhrases.OK,
-                token
-              )
-            );
+            return res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithData(ReasonPhrases.OK, token));
           }
         } else {
           //if facebook id is found in the database new entries should be created
@@ -704,14 +525,9 @@ export default class AuthController {
           }).save();
 
           const token = Helper.generate_Token(createUser._id);
-          return res.send(
-            Helper.responseWithData(
-              true,
-              StatusCodes.OK,
-              ReasonPhrases.OK,
-              token
-            )
-          );
+          return res
+            .status(StatusCodes.OK)
+            .send(Helper.responseWithData(ReasonPhrases.OK, token));
         }
       } else {
         const socialAcc = await new AdminSocialModel({
@@ -727,19 +543,14 @@ export default class AuthController {
         }).save();
 
         const token = Helper.generate_Token(createAdmin._id);
-        return res.send(
-          Helper.responseWithData(true, StatusCodes.OK, ReasonPhrases.OK, token)
-        );
+        return res
+          .status(StatusCodes.OK)
+          .send(Helper.responseWithData(ReasonPhrases.OK, token));
       }
     } catch (ex) {
-      return res.send(
-        Helper.responseWithoutData(
-          true,
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          // ReasonPhrases.INTERNAL_SERVER_ERROR
-          ex.message
-        )
-      );
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(Helper.responseWithoutData(ReasonPhrases.INTERNAL_SERVER_ERROR));
     }
   }
 }
