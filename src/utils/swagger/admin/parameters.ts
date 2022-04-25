@@ -50,7 +50,7 @@ export default class SwaggerParameters {
       },
     },
     getUser: {
-      name: "_id",
+      name: "id",
       in: "path",
       required: true,
       schema: {

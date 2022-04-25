@@ -348,6 +348,12 @@ export default class SwaggerPaths {
       get: {
         tags: ["User-options"],
         summary: "Used to get user list ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -357,6 +363,9 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/authToken",
           },
         ],
         responses: {
@@ -380,6 +389,16 @@ export default class SwaggerPaths {
               },
             },
           },
+          401: {
+            description: "Error status for Unauthorized access",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
           500: {
             description: "Error status for server error",
             content: {
@@ -393,10 +412,16 @@ export default class SwaggerPaths {
         },
       },
     },
-    "/get-user/{_id}": {
+    "/get-user/{id}": {
       get: {
         tags: ["User-options"],
         summary: "Used to get user data for edit-user-profile ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -406,6 +431,9 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/authToken",
           },
           {
             $ref: "#/components/parameters/getUser",
@@ -433,6 +461,16 @@ export default class SwaggerPaths {
               },
             },
           },
+          401: {
+            description: "Error status for Unauthorized access",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
           500: {
             description: "Error status for server error",
             content: {
@@ -450,6 +488,12 @@ export default class SwaggerPaths {
       post: {
         tags: ["User-options"],
         summary: "Used for edit user profile ",
+        security: [
+          {
+            //@ts-ignore
+            apiAuth: [],
+          },
+        ],
         parameters: [
           {
             $ref: "#/components/parameters/token",
@@ -459,6 +503,9 @@ export default class SwaggerPaths {
           },
           {
             $ref: "#/components/parameters/timestamp",
+          },
+          {
+            $ref: "#/components/parameters/authToken",
           },
         ],
 
@@ -485,6 +532,16 @@ export default class SwaggerPaths {
           },
           400: {
             description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error status for Unauthorized access",
             content: {
               "application/json": {
                 schema: {
@@ -555,6 +612,16 @@ export default class SwaggerPaths {
           },
           400: {
             description: "Error status for bad user input",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CommonResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error status for Unauthorized access",
             content: {
               "application/json": {
                 schema: {

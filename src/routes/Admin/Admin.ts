@@ -16,11 +16,13 @@ router.post("/login", validator("login"), AuthController.login);
 router.post("/signup", validator("adminSignup"), AuthController.signup);
 router.post("/google-login", AuthController.googleLogin);
 router.post("/facebook-login", AuthController.facebookLogin);
-router.get("/user-list", AuthController.userList);
-router.get("/user-count", AuthController.userCount);
+router.get("/user-list", auth.verifyjwtToken, AuthController.userList);
+router.get("/user-count", auth.verifyjwtToken, AuthController.userCount);
+router.get("/get-user/:id", auth.verifyjwtToken, AuthController.getUserDetails);
 router.post(
   "/edit-profile",
   validator("editProfile"),
+  auth.verifyjwtToken,
   AuthController.editProfile
 );
 router.post(

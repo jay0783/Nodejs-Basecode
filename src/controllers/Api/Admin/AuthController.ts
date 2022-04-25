@@ -176,23 +176,23 @@ export default class AuthController {
           .send(Helper.responseWithoutData(ReasonPhrases.BAD_REQUEST));
       } else {
         var decoded: any = jwt.verify(Authorization, process.env.JWT_SECRETKEY);
-      }
-      let admin = await AdminModel.findById(decoded._id);
-      if (admin) {
-        let linkTimeDifference = new Date().getTime() - admin.emailTime;
-        if (linkTimeDifference < 3 * 60 * 1000) {
-          res
-            .status(StatusCodes.OK)
-            .send(Helper.responseWithoutData(ReasonPhrases.OK));
+        let admin = await AdminModel.findById(decoded._id);
+        if (admin) {
+          let linkTimeDifference = new Date().getTime() - admin.emailTime;
+          if (linkTimeDifference < 3 * 60 * 1000) {
+            res
+              .status(StatusCodes.OK)
+              .send(Helper.responseWithoutData(ReasonPhrases.OK));
+          } else {
+            res
+              .status(StatusCodes.UNAUTHORIZED)
+              .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
+          }
         } else {
           res
             .status(StatusCodes.UNAUTHORIZED)
             .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
         }
-      } else {
-        res
-          .status(StatusCodes.UNAUTHORIZED)
-          .send(Helper.responseWithoutData(ReasonPhrases.UNAUTHORIZED));
       }
     } catch (error) {
       res
@@ -286,7 +286,9 @@ export default class AuthController {
     res: Response
   ): Promise<any> {
     try {
-      let user = await UserModel.findById(req.body._id);
+      let user = await UserModel.findById(req.params.id);
+      console.log(req.params.id);
+
       if (user) {
         res
           .status(StatusCodes.OK)
