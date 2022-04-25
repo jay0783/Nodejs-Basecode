@@ -4,28 +4,33 @@ export default class SwaggerDefinitions {
     CommonResponse: {
       type: "object",
       properties: {
-        responseStatus: {
-          type: "boolean",
-        },
-        responseCode: {
-          type: "integer",
-        },
-
-        responseMessage: {
+        message: {
           type: "string",
         },
       },
     },
     UserRegistrationRequest: {
       type: "object",
-      required: [
-        "first_name",
-        "last_name",
-        "email",
-        "mobile",
-        "candidate_type",
-      ],
+      required: ["first_name", "last_name", "email", "candidate_type"],
       properties: {
+        fullname: {
+          type: "string",
+        },
+        email: {
+          type: "string",
+        },
+        password: {
+          type: "string",
+        },
+      },
+    },
+    UserEditUserProfileRequest: {
+      type: "object",
+      required: ["_id", "fullname", "email", "mobile"],
+      properties: {
+        _id: {
+          type: "string",
+        },
         fullname: {
           type: "string",
         },
@@ -35,7 +40,13 @@ export default class SwaggerDefinitions {
         mobile: {
           type: "string",
         },
-        password: {
+      },
+    },
+    EditUserRequest: {
+      type: "object",
+      required: ["_id"],
+      properties: {
+        _id: {
           type: "string",
         },
       },
@@ -48,7 +59,7 @@ export default class SwaggerDefinitions {
         },
         {
           properties: {
-            responseData: {
+            data: {
               type: "string",
             },
           },
@@ -81,6 +92,80 @@ export default class SwaggerDefinitions {
       required: ["Authorization", "newPassword", "ReEnterPassword"],
       properties: {
         Authorization: {
+          type: "string",
+        },
+        newPassword: {
+          type: "string",
+        },
+        ReEnterPassword: {
+          type: "string",
+        },
+      },
+    },
+    UserDetailsResponse: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
+        },
+        {
+          properties: {
+            data: {
+              $ref: "#/components/schemas/UserResponseFields",
+            },
+          },
+        },
+      ],
+    },
+    UserResponseList: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
+        },
+        {
+          properties: {
+            data: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/UserResponseFields",
+              },
+            },
+          },
+        },
+      ],
+    },
+    UserResponseFields: {
+      type: "object",
+      properties: {
+        _id: {
+          type: "string",
+        },
+        fullname: {
+          type: "string",
+        },
+        email: {
+          type: "string",
+        },
+        mobile: {
+          type: "string",
+        },
+        password: {
+          type: "string",
+        },
+        createdAt: {
+          type: "string",
+        },
+        updatedAt: {
+          type: "string",
+        },
+      },
+    },
+    UserEditPasswordRequest: {
+      type: "object",
+      required: ["oldPassword", "newPassword", "ReEnterPassword"],
+      properties: {
+        oldPassword: {
           type: "string",
         },
         newPassword: {

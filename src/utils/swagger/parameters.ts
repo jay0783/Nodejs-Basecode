@@ -4,6 +4,7 @@ export default class SwaggerParameters {
     token: {
       name: "token",
       description: "Api token",
+
       in: "header",
       required: true,
       schema: {
@@ -35,6 +36,22 @@ export default class SwaggerParameters {
     authToken: {
       name: "Authorization",
       in: "header",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+    checkResetToken: {
+      name: "Authorization",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+    getUser: {
+      name: "id",
+      in: "path",
       required: true,
       schema: {
         type: "string",
