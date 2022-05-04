@@ -12,6 +12,9 @@ export default {
     title: "Admin API",
     version: "1.0.0",
     description: "Nodejs Basecode ",
+    contact: {
+      url: `${Locals.config().url}/adminswagger.json`,
+    },
   },
   servers: [
     {

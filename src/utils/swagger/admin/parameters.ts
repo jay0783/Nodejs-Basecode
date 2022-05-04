@@ -57,5 +57,31 @@ export default class SwaggerParameters {
         type: "string",
       },
     },
+    getPage: {
+      name: "title",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+    deleteUser: {
+      name: "id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+    language: {
+      name: "Accept-Language",
+      in: "header",
+      description: "ISO 2 Letter Language Code",
+      required: true,
+      schema: {
+        type: "string",
+        enum: ["en", "ar"],
+      },
+    },
   };
 }

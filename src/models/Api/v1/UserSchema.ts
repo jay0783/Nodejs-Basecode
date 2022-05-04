@@ -1,4 +1,3 @@
-import bcryptjs from "bcryptjs";
 import mongoose from "mongoose";
 import userSocialModel from "./userSocialModel";
 
@@ -14,31 +13,10 @@ const UserSchema = new mongoose.Schema(
     ],
     loginType: { type: Number, default: 0 }, //0 : Normal , 1 : Social
     emailTime: { type: Number, default: null },
-    // passwordResetToken: { type: String },
-    // passwordResetExpires: Date,
-
-    // facebook: { type: String },
-    // twitter: { type: String },
-    // google: { type: String },
-    // github: { type: String },
-    // instagram: { type: String },
-    // linkedin: { type: String },
-    // steam: { type: String },
-    // tokens: Array,
-
-    // gender: { type: String },
-    // geolocation: { type: String },
-    // website: { type: String },
-    // picture: { type: String },
   },
   {
     versionKey: false,
     timestamps: true,
   }
 );
-
-// UserSchema.pre("save", function () {
-//   this.password = bcryptjs.hashSync(this.password);
-// });
-
 export default UserSchema;

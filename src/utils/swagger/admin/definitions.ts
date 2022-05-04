@@ -26,7 +26,7 @@ export default class SwaggerDefinitions {
     },
     AdminEditUserProfileRequest: {
       type: "object",
-      required: ["_id", "fullname", "email", "mobile"],
+      required: ["_id", "fullname"],
       properties: {
         _id: {
           type: "string",
@@ -82,6 +82,18 @@ export default class SwaggerDefinitions {
       type: "object",
       required: ["email"],
       properties: {
+        email: {
+          type: "string",
+        },
+      },
+    },
+    SearchUserRequest: {
+      type: "object",
+      required: ["search"],
+      properties: {
+        name: {
+          type: "string",
+        },
         email: {
           type: "string",
         },
@@ -190,6 +202,110 @@ export default class SwaggerDefinitions {
       required: ["accessToken"],
       properties: {
         accessToken: {
+          type: "string",
+        },
+      },
+    },
+    appInfoResponse: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
+        },
+        {
+          properties: {
+            data: {
+              $ref: "#/components/schemas/appInfoResponseData",
+            },
+          },
+        },
+      ],
+    },
+    appInfoResponseData: {
+      type: "object",
+      properties: {
+        app_version: {
+          type: "string",
+        },
+        app_platform: {
+          type: "string",
+        },
+        force_updatable: {
+          type: "boolean",
+        },
+      },
+    },
+    getPageResponse: {
+      type: "object",
+      allOf: [
+        {
+          $ref: "#/components/schemas/CommonResponse",
+        },
+        {
+          properties: {
+            data: {
+              $ref: "#/components/schemas/getPageResponseData",
+            },
+          },
+        },
+      ],
+    },
+    getPageResponseData: {
+      type: "object",
+      properties: {
+        _id: {
+          type: "string",
+        },
+        title: {
+          type: "string",
+        },
+        slug: {
+          type: "string",
+        },
+        content: {
+          type: "string",
+        },
+      },
+    },
+    editPageRequest: {
+      type: "object",
+      required: ["title", "slug", "content"],
+      properties: {
+        _id: {
+          type: "string",
+        },
+        title: {
+          type: "string",
+        },
+        slug: {
+          type: "string",
+        },
+        content: {
+          type: "string",
+        },
+      },
+    },
+    editAppinfo: {
+      type: "object",
+      properties: {
+        _id: {
+          type: "string",
+        },
+        app_version: {
+          type: "string",
+        },
+        app_platform: {
+          type: "string",
+        },
+        force_updatable: {
+          type: "boolean",
+        },
+      },
+    },
+    logoutAdmin: {
+      type: "object",
+      properties: {
+        _id: {
           type: "string",
         },
       },

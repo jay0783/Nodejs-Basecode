@@ -7,7 +7,7 @@ export default function validate(methodName: String) {
           .notEmpty()
           .withMessage("fullname is required")
           .isLength({ min: 2, max: 30 })
-          .withMessage("fullname must be min 3 and max 30 characters long")
+          .withMessage("fullname must be min 2 and max 30 characters long")
           .isAlpha("en-US", { ignore: " " })
           .withMessage("fullname must be in Alphabetic"),
 
@@ -28,6 +28,7 @@ export default function validate(methodName: String) {
           .withMessage("Email length must be min 8 and more than 75"),
 
         body("mobile")
+          .optional({ checkFalsy: true })
           .notEmpty()
           .withMessage("Mobile num field is required")
           //@ts-ignore
@@ -124,6 +125,7 @@ export default function validate(methodName: String) {
           .withMessage("fullname must be in Alphabetic"),
 
         body("email")
+          .optional({ checkFalsy: true })
           .notEmpty()
           .withMessage("Email field is required")
           .isEmail()
@@ -132,6 +134,7 @@ export default function validate(methodName: String) {
           .withMessage("Email length must be min 8 and more than 75"),
 
         body("mobile")
+          .optional({ checkFalsy: true })
           .notEmpty()
           .withMessage("Mobile num field is required")
           //@ts-ignore
@@ -153,11 +156,6 @@ export default function validate(methodName: String) {
           .withMessage("newPassword is required")
           .isLength({ min: 8, max: 15 })
           .withMessage("newPassword must be 8 characters long"),
-        body("ReEnterPassword")
-          .notEmpty()
-          .withMessage("ReEnterPassword is required")
-          .isLength({ min: 8, max: 15 })
-          .withMessage("ReEnterPassword must be 8 characters long"),
       ];
     }
     default: {

@@ -56,6 +56,15 @@ export enum StatusCodes {
 }
 
 export enum ReasonPhrases {
+  EMAIL_EXISTS = "Email already exists",
+  MOBILE_EXISTS = "Mobile number already exists",
+  EMAIL_INCORRECT = "Please enter valid email",
+  MOBILE_INCORRECT = "Please enter valid mobile number",
+  PASSWORD_INCORRECT = "Password is incorrect",
+  OLD_PASSWORD_INCORRECT = "Old password is incorrect",
+  TOKEN_INCORRECT = "Incorrect access token",
+  NO_TOKEN = "Provide a valid access token",
+  INCORRECT_PARAMS = "Incorrect parameters",
   ACCEPTED = "Accepted",
   BAD_GATEWAY = "Bad Gateway",
   BAD_REQUEST = "Bad Request",
