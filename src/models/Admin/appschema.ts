@@ -3,9 +3,13 @@ import mongoose from "mongoose";
 // Define the User Schema
 const appSchema = new mongoose.Schema(
   {
-    app_platform: { type: String },
-    app_version: { type: String },
-    force_updatable: { type: Boolean },
+    app_version: [
+      {
+        app_platform: String,
+        app_version: String,
+        force_updatable: Boolean,
+      },
+    ],
   },
   {
     versionKey: false,

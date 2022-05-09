@@ -224,14 +224,25 @@ export default class SwaggerDefinitions {
     appInfoResponseData: {
       type: "object",
       properties: {
+        _id: {
+          type: "string",
+        },
         app_version: {
-          type: "string",
-        },
-        app_platform: {
-          type: "string",
-        },
-        force_updatable: {
-          type: "boolean",
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              app_version: {
+                type: "string",
+              },
+              app_platform: {
+                type: "string",
+              },
+              force_updatable: {
+                type: "boolean",
+              },
+            },
+          },
         },
       },
     },
@@ -286,21 +297,7 @@ export default class SwaggerDefinitions {
       },
     },
     editAppinfo: {
-      type: "object",
-      properties: {
-        _id: {
-          type: "string",
-        },
-        app_version: {
-          type: "string",
-        },
-        app_platform: {
-          type: "string",
-        },
-        force_updatable: {
-          type: "boolean",
-        },
-      },
+      $ref: "#/components/schemas/appInfoResponseData",
     },
     logoutAdmin: {
       type: "object",

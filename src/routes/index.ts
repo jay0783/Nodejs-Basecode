@@ -1,7 +1,7 @@
 /**
  * Define all your API routes
  *
- * @author Sameer <sameerp.spaceo@gmail.com>
+ * @author Jay Patel <sameerp.spaceo@gmail.com>
  */
 
 import { Router } from "express";

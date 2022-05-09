@@ -11,7 +11,7 @@
 /**
  * Define interface for User Model
  *
- * @author Sameer <sameerp.spaceo@gmail.com>
+ * @author Jay Patel <sameerp.spaceo@gmail.com>
  */
 
 //  export interface Tokens {

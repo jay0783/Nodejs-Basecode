@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import appSchema from "./appschema";
-import appInterface from "../../../types/appInterface";
+import appInterface from "../../types/appInterface";
 
 const app_setting = mongoose.model<appInterface>("app_setting", appSchema);
 

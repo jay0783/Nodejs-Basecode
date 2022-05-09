@@ -1,7 +1,7 @@
 /**
  * Define App Configs
  *
- * @author Sameer
+ * @author Jay Patel
  */
 import { Application } from "express";
 import "dotenv/config";

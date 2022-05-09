@@ -1,7 +1,6 @@
 /**
  * Define Auth for the API
  *
- * @author Sameer <sameerp.spaceo@gmail.com>
  */
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
@@ -12,12 +11,11 @@ import fetch from "node-fetch";
 import AdminModel from "../../../models/Admin/adminModel";
 import AdminSocialModel from "../../../models/Admin/adminSocialModel";
 import UserModel from "../../../models/Api/v1/UserModel";
-import appModel from "../../../models/Api/v1/appModel";
+import appModel from "../../../models/Admin/appModel";
 import deviceModel from "../../../models/Api/v1/deviceModel";
-import pageModel from "../../../models/Api/v1/pageModel";
+import pageModel from "../../../models/Admin/pageModel";
 import Helper from "../../../helpers/commonFunction";
 import { ReasonPhrases, StatusCodes } from "../../../utils/responses/index";
-import { conforms } from "lodash";
 
 const client = new OAuth2Client("407408718192.apps.googleusercontent.com");
 
@@ -689,7 +687,7 @@ export default class AuthController {
 
   public static async getAppinfo(req: Request, res: Response): Promise<any> {
     try {
-      const appInfo = await appModel.find({});
+      const appInfo = await appModel.find({}).select("-createdAt -updatedAt");
       if (appInfo) {
         res
           .status(StatusCodes.OK)
